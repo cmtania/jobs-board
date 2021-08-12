@@ -1,3 +1,6 @@
+I used Angular 12 for front end and NodeJs with Rest API using local JSON file for backend.
+Please run npm install after you clone my project.
+
 # jobs-board
 Create jobs board with CRUD functionality
 
