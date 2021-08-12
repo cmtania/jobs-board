@@ -1,0 +1,80 @@
+<div class="container mt-5 mb-3">
+  <h4>Edit Job</h4>
+  <form class="form-horizontal" #editJobForm="ngForm" ngNativeValidate>
+    <div class="form-group">
+      <label class="control-label col-md-3" for="pwd">Job Title:</label>
+      <div class="col-md-6">
+        <input [(ngModel)]="editJobVm.JobTitle" name="jobtitle" #jobtitle="ngModel" class="form-control"
+          autocomplete="off" required />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Company:</label>
+      <div class="col-md-6">
+        <select required [(ngModel)]="editJobVm.CompanyId" name="CompanyId" #CompanyId="ngModel" required
+          class="form-control">
+          <option [ngValue]="undefined" selected>--Select here--</option>
+          <option *ngFor="let company of getCompany()" [ngValue]="company.id"> {{ company.value }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Job Type:</label>
+      <div class="col-md-6">
+        <select required [(ngModel)]="editJobVm.JobType" name="JobType" #JobType="ngModel" class="form-control"
+          required>
+          <option [ngValue]="undefined" selected>--Select here--</option>
+          <option> Part Time</option>
+          <option> Full Time</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-md-3" for="pwd">Job Description: </label>
+      <div class="col-md-6">
+        <textarea [(ngModel)]="editJobVm.JobDescription" name="JobDescription" #JobDescription="ngModel"
+          class="form-control" required></textarea>
+
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-3" for="pwd">Salary:</label>
+      <div class="col-md-6">
+        <input [(ngModel)]="editJobVm.Salary" name="Salary" #Salary="ngModel" class="form-control" autocomplete="off"
+          required numbersOnly />
+
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="btn-control" align="right">
+        <button *ngIf="isUpdating == true" type="submit" class="btn btn-md btn-success" data-bs-toggle="modal"
+          data-bs-target="#ConfirmationModal" [disabled]="!editJobForm.form.valid">
+          <span class="fa fa-save"></span> Update</button>
+        <button *ngIf="!isUpdating" class="btn btn-md btn-success" type="button" disabled>
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Updating...
+        </button>
+        <button type="button" class="btn btn-md btn-primary backtolist" (click)="backtoList()">
+          <span class="fa fa-arrow-circle-left"></span> Back To List</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ConfirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="ConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to update this job?</h5>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="updateJob()">Yes</button>
+        <button type="button" #closebutton class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
