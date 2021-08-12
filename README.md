@@ -1,7 +1,9 @@
+## Jobs Board Web App
 I used Angular 12 for front end and NodeJs with Rest API using local JSON file for backend.
-Please run npm install to front end and node js backend then npm start after you clone my project.
+## Instructions
+Run 'npm install' to front end and node js backend then npm start after you clone my project.
 
-Screenshot
+## Actual Dashboard
 ![Screenshot](my_ui.png)
 
 # jobs-board
