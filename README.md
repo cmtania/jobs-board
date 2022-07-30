@@ -43,5 +43,5 @@ Optional:
 - Add sorting functionality
 
 ### My added features:
-- 7/31/2022, Added register applicant features
+- 7/31/2022, Added register applicant module and added API for applicant
 
