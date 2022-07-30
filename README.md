@@ -42,6 +42,6 @@ Optional:
 - Add functionality to paginate job listings
 - Add sorting functionality
 
-My additional features:
+### My added features:
 - 7/31/2022, Added register applicant features
 
