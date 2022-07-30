@@ -1,0 +1,32 @@
+[
+    {
+        "ApplicantID": 1,
+        "FirstName": "Christian",
+        "MiddleName": "Miradios",
+        "LastName": "tania",
+        "Age": 27,
+        "Gender": "M",
+        "Address": "10 Ilino Cruz, Vergara, Mandaluyong City",
+        "Email": "taniachristian01@gmail.com",
+        "CreatedBy": "Admin",
+        "CreatedDate": "2022-07-30T14:19:41.187Z",
+        "UpdatedBy": "",
+        "UpdatedDate": "",
+        "Purge": "N"
+    },
+    {
+        "CreatedDate": "2022-07-30T15:48:08.007Z",
+        "CreatedBy": "Admin.Job",
+        "UpdatedBy": "",
+        "UpdatedDate": "",
+        "Purge": "N",
+        "FirstName": "Christian",
+        "MiddleName": "Miradios",
+        "LastName": "Tania",
+        "Age": "27",
+        "Gender": "",
+        "Address": "19 Ilino Cruz",
+        "Email": "",
+        "ApplicantID": 2
+    }
+]

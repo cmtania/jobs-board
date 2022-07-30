@@ -1,5 +1,6 @@
 
-const jobFunction = require('./app/function/job.js')
+const jobFunction = require('./app/function/job.js');
+const applicantFunction = require('./app/function/applicant.js')
 const express = require("express");
 const cors = require('cors')
 const PORT = process.env.PORT || 3001;
@@ -9,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 //console.log(JSON.stringify(jobList));
 
+/*-------job API -------*/
 app.get("/api/job", (req, res) => {
   let result = jobFunction.getJobs();
   res.json(result);
@@ -34,6 +36,14 @@ app.put("/api/job/:id", (req, res) => {
 app.delete("/api/job/:id", (req, res) => {
   console.log(req.body);
   let result = jobFunction.purgeJob(req.params.id);
+  res.json(result);
+});
+
+
+/*-------applicant API -------*/
+app.post("/api/applicant", (req, res) => {
+  console.log(req.body);
+  let result = applicantFunction.postApplicant(req.body);
   res.json(result);
 });
 
