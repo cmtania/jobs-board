@@ -1,6 +1,7 @@
 import { getLocaleDateFormat } from "@angular/common";
+import { BaseModel } from "./base.model";
 
-export class JobModel {
+export class JobModel extends BaseModel {
         JobId: number = 0;
         JobTitle: string = "";
         CompanyId: number = 0;
@@ -8,23 +9,13 @@ export class JobModel {
         JobDescription: string = ""
         JobType: string = "";
         Salary: string = "";
-        CreatedDate: string = "";
-        CreatedBy: string= "";
-        UpdatedBy: string = "";
-        UpdatedDate: string ="";
-        Purge: string = "N";
 }
 
-export class NewEditJobModel {
+export class NewEditJobModel extends BaseModel {
         JobId: number = 0;
         JobTitle: string = "";
         CompanyId: number = undefined;
         JobDescription: string = ""
         JobType: string = "";
         Salary: string = "";
-        CreatedDate: string = "";
-        CreatedBy: string= "";
-        UpdatedBy: string = "";
-        UpdatedDate: string ="";
-        Purge: string = "N";
 }

@@ -1,9 +1,10 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { Company } from 'src/app/model/company.enum';
 import { JobModel, NewEditJobModel } from 'src/app/model/job-model';
-import { JobService } from '../services/job-services';
+import { JobService } from '../../services/job.service';
 
 @Component({
   selector: 'app-create-job',
@@ -13,49 +14,49 @@ import { JobService } from '../services/job-services';
 export class CreateJobComponent implements OnInit {
 
   modalTitle: string = "Create New Job";
-  @ViewChild("createJobForm") createJobForm: NgForm;
-  @ViewChild("closebutton") closebutton: any;
+  @ViewChild('createJobForm') createJobForm: NgForm;
+  @ViewChild('closebutton') closebutton: any;
   newJobModel: NewEditJobModel;
   modalPrompt: TemplateRef<any>;
   companyList: any;
   isSaving: Boolean = true;
   isSuccessNotif: Boolean = true;
+  public subscription: Subscription;
 
   constructor(private _jobService: JobService,
     private _route: ActivatedRoute,
     private _router: Router) {
-    this.newJobModel = new NewEditJobModel();
-  }
+      this.newJobModel = new NewEditJobModel();
+     }
 
   ngOnInit(): void {
-    this.getCompany();
+   this.getCompany();
   }
 
   Confirm(ConfirmationSave: TemplateRef<any>, PromptToAddRole: TemplateRef<any>) {
     this.modalPrompt = PromptToAddRole;
-  }
+     }
   SaveJob(): void {
     this.isSaving = false;
-    let createdDate = new Date();
-    this.newJobModel.CreatedDate = createdDate.toISOString();
     this.newJobModel.CreatedBy = "Admin.Job"
     this.newJobModel.Purge = "N";
-    this._jobService.postJob(this.newJobModel).subscribe(() => {
 
-      this.isSaving = true;
-      this.isSuccessNotif = false;
-      this.closeModal();
-      setTimeout(() => {
-        this.isSuccessNotif = true;
-      }, 2000);
+    this.resetSubscription();
 
-      this.createJobForm.reset();
-    },
-      err => {
-        console.log(err);
+    this.subscription = this._jobService.postJob(this.newJobModel).subscribe(() => {
         this.isSaving = true;
+        this.isSuccessNotif = false;
+        this.closeModal();
+        setTimeout(() =>{
+          this.isSuccessNotif = true;
+        }, 2000);
+        
+        this.createJobForm.reset();
+      },
+      err => { console.log(err);
+                this.isSaving =true;
       })
-
+    
   }
 
   getCompany(): any {
@@ -64,29 +65,35 @@ export class CreateJobComponent implements OnInit {
     let num = 1;
     let company = [];
     for (const key in enumCompany) {
-      company.push({ id: num, value: enumCompany[key] });
+      company.push({ id: num, value: enumCompany[key]});
       num++;
     }
     return company;
   }
 
   Decline(): void {
-    // this.modalRefChild.hide();
+   // this.modalRefChild.hide();
   }
-  PromptConfirm() {
+  PromptConfirm(){
     // this.getAllRole();
     // this.modalRefChild1.hide();
   }
-  PromptDecline() {
+  PromptDecline(){
     // this.modalRefChild1.hide();
     // this.BackTolist();
   }
 
   backtoList(): void {
-    this._router.navigateByUrl("/home");
+    this._router.navigateByUrl("/job-dashboard");
   }
 
-  closeModal() {
+  closeModal(){
     this.closebutton.nativeElement.click();
+  }
+
+  resetSubscription(): void{
+    if (this.subscription){
+      this.subscription.unsubscribe();
+    };
   }
 }

@@ -4,26 +4,32 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
-import { HomeComponent } from './home/home.component';
-import { CreateJobComponent } from './create-job/create-job.component';
-import { EditJobComponent } from './edit-job/edit-job.component';
-import { JobDetailsComponent } from './job-details/job-details.component';
+import { CreateJobComponent } from './job/create-job/create-job.component';
+import { JobDetailsComponent } from './job/job-details/job-details.component';
 import { FormsModule } from '@angular/forms';
 import { PostedDatePipe } from './shared/pipe/postedDate-pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FilterDataPipe } from './shared/pipe/FilterDataPipe';
 import { NumberDirective } from './shared/directives/numbers-only.directive';
 import { FilterTextPipe } from './shared/pipe/filter-pipe.pipe';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RegisterComponent } from './applicant/register/register.component';
+import { JobService } from './services/job.service';
+import { ApplicantService } from './services/applicant.service';
+import { EditJobComponent } from './job/edit-job/edit-job.component';
+import { JobDashboardComponent } from './job/job-dashboard/job-dashboard.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
+    JobDashboardComponent,
     CreateJobComponent,
     EditJobComponent,
     JobDetailsComponent,
+    RegisterComponent,
     PostedDatePipe,
+    FilterDataPipe,
     NumberDirective,
     FilterTextPipe
   ],
@@ -39,8 +45,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   exports: [PostedDatePipe,
             NgxSpinnerModule,
             BrowserAnimationsModule,
+            FilterDataPipe,
             NumberDirective,
             FilterTextPipe],
+  providers: [JobService, ApplicantService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

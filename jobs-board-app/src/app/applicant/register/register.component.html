@@ -1,0 +1,96 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-heading">
+                    <img width="60" alt="remoteJobs" src="../assets/jobs-logo.png" />
+                    <span class="appname">remoteJobs</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Register</h3>
+        </div>
+    </div>
+    <hr class="col-md-6">
+        <div class="container mt-2 mb-3">
+            <h4>Personal Information</h4>
+            <form class="form-horizontal" #registerForm="ngForm" ngNativeValidate>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="pwd">First Name:</label>
+                    <div class="col-md-6">
+                        <input [(ngModel)]="applicantData.FirstName" name="firstName" #firstName="ngModel" class="form-control"
+                            autocomplete="off" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="pwd">Middle Name:</label>
+                    <div class="col-md-6">
+                        <input [(ngModel)]="applicantData.MiddleName" name="middleName" #middleName="ngModel" class="form-control"
+                            autocomplete="off" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="pwd">Last Name:</label>
+                    <div class="col-md-6">
+                        <input [(ngModel)]="applicantData.LastName" name="lastName" #lastName="ngModel" class="form-control"
+                            autocomplete="off" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="pwd">Age:</label>
+                    <div class="col-md-6">
+                        <input [(ngModel)]="applicantData.Age" name="age" #age="ngModel" class="form-control"
+                            autocomplete="off" required numbersOnly />
+        
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="pwd">Address:</label>
+                    <div class="col-md-6">
+                        <input [(ngModel)]="applicantData.Address" name="address" #address="ngModel" class="form-control"
+                            autocomplete="off" required />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="btn-control" align="right">
+                        <button *ngIf="isSaving == true" type="submit" class="btn btn-md btn-success" data-bs-toggle="modal"
+                            data-bs-target="#ConfirmationModal" [disabled]="!registerForm.form.valid">
+                            <i class="fas fa-check-circle"></i> Register</button>
+                        <button *ngIf="!isSaving" class="btn btn-md btn-success" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Saving...
+                        </button>
+                        <button type="button" class="btn btn-md btn-primary backtolist" (click)="backtoList()">
+                            <i class="fas fa-times-circle"></i> Cancel</button>
+                    </div>
+                </div>
+                <div class="col-md-6" *ngIf="!isSuccessNotif">
+                    <div class="row success">
+                        <div class="alert alert-success" role="alert">
+                            Successfully saved.
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="ConfirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="ConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to register?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" (click)="SavePersonDetails()"> <i class="fas fa-check-circle"></i> Yes</button>
+                <button type="button" #closebutton class="btn btn-primary" data-bs-dismiss="modal"> <i class="fas fa-times-circle"></i> Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

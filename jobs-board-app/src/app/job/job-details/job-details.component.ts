@@ -2,9 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
+import { Subscription } from 'rxjs';
 import { Company } from 'src/app/model/company.enum';
 import { NewEditJobModel } from 'src/app/model/job-model';
-import { JobService } from 'src/app/services/job-services';
+import { JobService } from 'src/app/services/job.service';
 
 @Component({
   selector: 'app-job-details',
@@ -22,6 +23,8 @@ export class JobDetailsComponent implements OnInit {
   pageTitle: string = "Job Details";
   jobDescription: string = "";
   @ViewChild('closebutton') closebutton: any;
+
+  public subscription: Subscription;
   
   constructor(private _jobService: JobService,
     private _route: ActivatedRoute,
@@ -40,6 +43,7 @@ export class JobDetailsComponent implements OnInit {
 
   getJob(){
     this._spinner.show();
+    this.resetSubscription();
     this._jobService.getJob(this.jobId).subscribe( data =>{
       this.job = data;
       this._spinner.hide();
@@ -50,13 +54,10 @@ export class JobDetailsComponent implements OnInit {
     })
   }
 
-  updateJob(){
+  updateJob(): void{
     this.isLoading = false;
     this.isUpdating = true;
     this.isSuccessNotif = true;
-    let createdDate = new Date();
-    this.job.UpdatedDate = createdDate.toISOString();
-    this.job.UpdatedDate = "Admin.Job"
     this.job.JobDescription = this.jobDescription;
     this._jobService.putJob(this.job).subscribe(() => {
       console.log("Saved.");
@@ -76,22 +77,26 @@ export class JobDetailsComponent implements OnInit {
     })
 }
 
-
+resetSubscription(): void{
+  if (this.subscription){
+    this.subscription.unsubscribe();
+  };
+}
   getCompanyName(companyId: number): string{
     return Company[companyId];
   }
 
-  editJD(){
+  editJD():void{
     this.hideJd = true;
     this.isUpdating = false;
     this.jobDescription = this.job.JobDescription;
   }
 
-  backtoList(){
-    this._router.navigateByUrl("/home");
+  backtoList():void{
+    this._router.navigateByUrl("/job-dashboard");
   }
 
-  closeModal(){
+  closeModal():void{
     this.closebutton.nativeElement.click();
   }
 }
