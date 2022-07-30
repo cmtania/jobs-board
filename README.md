@@ -6,6 +6,9 @@ Run 'npm install' to front end and node js backend then npm start after you clon
 ## Actual Dashboard
 ![Screenshot](my_ui.png)
 
+## Register Applicant UI
+![Screenshot](register-applicant_ui.jpg)
+
 # jobs-board
 Create jobs board with CRUD functionality
 
