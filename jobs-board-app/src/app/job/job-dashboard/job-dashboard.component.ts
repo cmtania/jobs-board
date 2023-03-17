@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, OperatorFunction, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, timeout } from 'rxjs/operators';
-import { Company } from 'src/app/model/company.enum';
-import { JobModel } from 'src/app/model/job-model';
-import { JobService } from 'src/app/services/job.service';
+import { Company } from '../../model/company.enum';
+import { JobModel } from '../../model//job-model';
+import { JobService } from '../../services/job-services';
 import * as _ from 'lodash';
-import { SearchQuery } from 'src/app/interfaces/search-query';
+import { SearchQuery } from '../../interfaces/search-query';
 
 @Component({
   selector: 'job-dashboard',

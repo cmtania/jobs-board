@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { Company } from 'src/app/model/company.enum';
-import { JobModel } from 'src/app/model/job-model';
-import { JobService } from 'src/app/services/job-services';
 
 
 @Component({

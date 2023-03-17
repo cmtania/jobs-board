@@ -3,9 +3,9 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
-import { Company } from 'src/app/model/company.enum';
-import { NewEditJobModel } from 'src/app/model/job-model';
-import { JobService } from 'src/app/services/job.service';
+import { Company } from '../../model/company.enum';
+import { NewEditJobModel } from '../../model/job-model';
+import { JobService } from '../../services/job-services';
 
 @Component({
   selector: 'app-edit-job',

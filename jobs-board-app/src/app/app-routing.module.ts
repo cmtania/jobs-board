@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'edit-job/:id', component: EditJobComponent },
   { path: 'view-job/:id', component: JobDetailsComponent },
   { path: 'register', component: RegisterComponent },
-  { path: '',redirectTo: '/home',pathMatch: 'full'}
+  { path: '',redirectTo: '/job-dashboard',pathMatch: 'full'}
 ];
 
 @NgModule({

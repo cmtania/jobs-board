@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { map } from 'rxjs/operators';
-import { NewEditJobModel } from 'src/app/model/job-model';
+import { NewEditJobModel } from '../../app/model/job-model';
 
 @Injectable({
   providedIn: 'root'
