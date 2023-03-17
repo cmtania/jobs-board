@@ -2,20 +2,20 @@ const fs = require('fs');
 
 function getJobs() {
     const jobDto = fs.readFileSync('./app/data/main-data.json');//use to test in index.js
-    var jobListDto = JSON.parse(jobDto);
+    let jobListDto = JSON.parse(jobDto);
     return jobListDto;
 }
 
 function getJob(jobId) {
     const jobDto = fs.readFileSync('./app/data/main-data.json');//use to test in index.js
-    var jobListDto = JSON.parse(jobDto);
+    let jobListDto = JSON.parse(jobDto);
     let job = jobListDto.filter(i => i.JobId == jobId);
     return job[0];
 }
 
 function postJob(job) {
     const jobDto = fs.readFileSync('./app/data/main-data.json');//use to test in index.js
-    var jobListDto = JSON.parse(jobDto);
+    let jobListDto = JSON.parse(jobDto);
     console.log(jobListDto.length);
     if (jobListDto.length == 0) {
         job.JobId = 1;
@@ -40,18 +40,14 @@ function postJob(job) {
 
 function putJob(jobVm, jobId) {
     const jobDto = fs.readFileSync('./app/data/main-data.json');//use to test in index.js
-    var jobListDto = JSON.parse(jobDto);
+    let jobListDto = JSON.parse(jobDto);
 
     let newJobList = jobListDto.filter(function (obj) {
         return obj.JobId !== +jobId;
     });
-
     let jobParse = [jobVm];
-
     let mergeData = [...newJobList, ...jobParse];
-
     let finalData = JSON.stringify(mergeData);
-
     fs.writeFile("./app/data/main-data.json", finalData, (err) => {
         // Error checking
         if (err) throw err;
@@ -63,7 +59,7 @@ function putJob(jobVm, jobId) {
 
 function purgeJob(jobId) {
     const jobDto = fs.readFileSync('./app/data/main-data.json');//use to test in index.js
-    var jobListDto = JSON.parse(jobDto);
+    let jobListDto = JSON.parse(jobDto);
 
     let newJobList = jobListDto.filter(function (obj) {
         return obj.JobId !== +jobId;

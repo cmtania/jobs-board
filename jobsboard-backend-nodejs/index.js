@@ -12,7 +12,7 @@ app.use(express.json());
 
 /*-------job API -------*/
 app.get("/api/job", (req, res) => {
-  let result = jobFunction.getJobs();
+  const result = jobFunction.getJobs();
   res.json(result);
 });
 
@@ -23,13 +23,13 @@ app.get("/api/job/:id", (req, res) => {
 
 app.post("/api/job", (req, res) => {
   console.log(req.body);
-  let result = jobFunction.postJob(req.body);
+  const result = jobFunction.postJob(req.body);
   res.json(result);
 });
 
 app.put("/api/job/:id", (req, res) => {
   console.log(req.body);
-  let result = jobFunction.putJob(req.body, req.params.id);
+  const result = jobFunction.putJob(req.body, req.params.id);
   res.json(result);
 });
 
@@ -43,7 +43,7 @@ app.delete("/api/job/:id", (req, res) => {
 /*-------applicant API -------*/
 app.post("/api/applicant", (req, res) => {
   console.log(req.body);
-  let result = applicantFunction.postApplicant(req.body);
+  const result = applicantFunction.postApplicant(req.body);
   res.json(result);
 });
 

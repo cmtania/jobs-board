@@ -51,7 +51,7 @@ export class JobDashboardComponent implements OnInit {
         debounceTime(200),
         distinctUntilChanged(),
         map((term) =>
-          term.length < 3
+          term.length < 2
             ? []
             : this.suggestions
                 .filter((v: any) => v.toLowerCase().indexOf(term.toLowerCase()) > -1)
@@ -75,7 +75,7 @@ export class JobDashboardComponent implements OnInit {
 
   getJobs() {
     this._spinner.show();
-    this.resetSubscription();
+    this.unsubscribe();
     this.subscription = this._jobService.getJobs().subscribe(res => {
         //console.log(res);
         this.jobs = res.sort((a: any, b: any) => b.JobId - a.JobId);;
@@ -92,7 +92,7 @@ export class JobDashboardComponent implements OnInit {
 
   }
 
-  searchAll(){
+  searchAll(): void{
     this.searchVariable.forEach(x => {
       let arr = _.unionBy(_.map(this.jobs, x));
        this.suggestions.push(...arr);
@@ -133,7 +133,7 @@ export class JobDashboardComponent implements OnInit {
     return "white"
   }
 
-  gotoEdit(jobId: number) {
+  gotoEdit(jobId: number): void {
     console.log(jobId);
     this._router.navigateByUrl("/edit-job/" + jobId);
   }
@@ -143,16 +143,17 @@ export class JobDashboardComponent implements OnInit {
     this._router.navigateByUrl("/view-job/" + jobId);
   }
 
-  getJobId(jobId: number) {
+  getJobId(jobId: number): void {
     this.jobId = jobId;
   }
 
-  purgeJob() {
+  purgeJob(): void {
     this._spinner.show();
 
-    this.resetSubscription();
+    this.unsubscribe();
 
-    this.subscription = this._jobService.purgeJob(this.jobId).subscribe(() => {
+    this.subscription = this._jobService.purgeJob(this.jobId)
+      .subscribe(() => {
       this.closeModal();
       this.getJobs();
       this.closeModal();
@@ -163,14 +164,12 @@ export class JobDashboardComponent implements OnInit {
     })
   }
 
-  closeModal() {
+  closeModal(): void {
     this.closebutton.nativeElement.click();
   }
 
-  resetSubscription(): void{
-    if (this.subscription){
-      this.subscription.unsubscribe();
-    };
+  unsubscribe(): void{
+    this.subscription?.unsubscribe();
   }
 
 }
