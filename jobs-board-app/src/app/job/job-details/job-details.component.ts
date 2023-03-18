@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
+import { JobModel } from '../../model/job-model';
 import { Company } from '../../model/company.enum';
-import { NewEditJobModel } from '../../model/job-model';
 import { JobService } from '../../services/job-services';
 
 @Component({
@@ -13,7 +13,7 @@ import { JobService } from '../../services/job-services';
 })
 export class JobDetailsComponent implements OnInit {
 
-  job: NewEditJobModel;
+  job: JobModel;
   isUpdating: Boolean = true;
   hideJd: boolean = false;
   isLoading: boolean = true;
@@ -29,7 +29,7 @@ export class JobDetailsComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _spinner: NgxSpinnerService) {
-      this.job = new NewEditJobModel();
+      this.job = new JobModel();
       this.jobId = this._route.snapshot.params.id;
      }
 
