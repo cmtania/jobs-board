@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, OperatorFunction, Subscription } from 'rxjs';
@@ -6,8 +6,9 @@ import { debounceTime, distinctUntilChanged, map, timeout } from 'rxjs/operators
 import { Company } from '../../model/company.enum';
 import { JobModel } from '../../model//job-model';
 import { JobService } from '../../services/job-services';
-import * as _ from 'lodash';
 import { SearchQuery } from '../../interfaces/search-query';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'job-dashboard',
@@ -76,20 +77,23 @@ export class JobDashboardComponent implements OnInit {
   getJobs() {
     this._spinner.show();
     this.unsubscribe();
-    this.subscription = this._jobService.getJobs().subscribe(res => {
-        //console.log(res);
-        this.jobs = res.sort((a: any, b: any) => b.JobId - a.JobId);;
-        this._spinner.hide();
-      }, err => {
+    this.subscription = this._jobService.getJobs().subscribe({
+      next: (data: any) => {
+        this.jobs = data;
+      },
+      error: (err) => {
         console.log(err);
         this._spinner.hide();
-      },()=>{
-        this.jobs.forEach(x => {
-           x.CompanyName = this.getCompanyName(x.CompanyId);
-         });
-         this.searchAll();
-      })
-
+      },
+      complete: () => {
+        this.jobs.map((x) => {
+          return x.CompanyName = this.getCompanyName(x.CompanyId),
+            x.CompanyLogo = this.getCompanyLogo(x.CompanyId);
+        });
+        this.searchAll();   
+        this._spinner.hide();
+      },
+    });
   }
 
   searchAll(): void{
@@ -105,7 +109,7 @@ export class JobDashboardComponent implements OnInit {
   }
 
   getCompanyLogo(companyId: number): string {
-    return Company[companyId].toLocaleLowerCase();
+    return Company[companyId].toLowerCase();
   }
 
   gotoCreateJob():void {

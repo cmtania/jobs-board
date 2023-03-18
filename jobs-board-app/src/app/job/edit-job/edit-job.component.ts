@@ -3,9 +3,10 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs';
+import { JobModel } from '../../model/job-model';
 import { Company } from '../../model/company.enum';
-import { NewEditJobModel } from '../../model/job-model';
 import { JobService } from '../../services/job-services';
+import { join } from 'lodash';
 
 @Component({
   selector: 'app-edit-job',
@@ -14,7 +15,7 @@ import { JobService } from '../../services/job-services';
 })
 export class EditJobComponent implements OnInit {
 
-  editJobVm: NewEditJobModel;
+  editJobVm: JobModel;
   isUpdating: Boolean = true;
   jobId: number;
   isSuccessNotif: Boolean = true;
@@ -28,7 +29,7 @@ export class EditJobComponent implements OnInit {
     private _spinner: NgxSpinnerService,
     private _route: ActivatedRoute,
     private _router: Router,) {
-      this.editJobVm = new NewEditJobModel();
+      this.editJobVm = new JobModel();
       this.jobId = this._route.snapshot.params.id;
      }
 
@@ -38,24 +39,24 @@ export class EditJobComponent implements OnInit {
 
   getJob(){
     this._spinner.show();
-
-    this.resetSubscription();
-
-    this.subscription = this._jobService.getJob(this.jobId).subscribe( (data: NewEditJobModel) =>{
-      this.editJobVm = data;
-      this._spinner.hide();
-    },(err: any) => {
-      console.log(err);
-      this._spinner.hide();
-      this._router.navigateByUrl("not-found");
-    })
+    this.unsubscription();
+    this.subscription = this._jobService.getJob(this.jobId)
+    .subscribe({
+      next: (data: JobModel) => {
+        this.editJobVm = data;
+        this._spinner.hide();
+      },
+      error: (err) => {
+        console.log(err);
+        this._spinner.hide();
+        this._router.navigateByUrl("not-found");
+      }
+    });
   }
 
   updateJob(){
-      this.isUpdating = false;
-
-      this.resetSubscription();
-
+    this.isUpdating = false;
+    this.unsubscription();
     this.subscription = this._jobService.putJob(this.editJobVm).subscribe(() => {
         console.log("Saved.");
         this.isUpdating =true;
@@ -89,10 +90,8 @@ export class EditJobComponent implements OnInit {
     this._router.navigateByUrl("/job-dashboard");
   }
 
-  resetSubscription(): void{
-    if (this.subscription){
-      this.subscription.unsubscribe();
-    };
+  unsubscription(): void{
+    this.subscription?.unsubscribe();
   }
 
 }

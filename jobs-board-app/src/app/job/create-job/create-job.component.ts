@@ -2,8 +2,8 @@ import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { JobModel } from '../../model/job-model';
 import { Company } from '../../model/company.enum';
-import { JobModel, NewEditJobModel } from '../../model/job-model';
 import { JobService } from '../../services/job-services';
 
 @Component({
@@ -16,7 +16,7 @@ export class CreateJobComponent implements OnInit {
   modalTitle: string = "Create New Job";
   @ViewChild('createJobForm') createJobForm: NgForm;
   @ViewChild('closebutton') closebutton: any;
-  newJobModel: NewEditJobModel;
+  newJobModel: JobModel;
   modalPrompt: TemplateRef<any>;
   companyList: any;
   isSaving: Boolean = true;
@@ -26,7 +26,7 @@ export class CreateJobComponent implements OnInit {
   constructor(private _jobService: JobService,
     private _route: ActivatedRoute,
     private _router: Router) {
-      this.newJobModel = new NewEditJobModel();
+      this.newJobModel = new JobModel();
      }
 
   ngOnInit(): void {

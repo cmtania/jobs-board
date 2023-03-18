@@ -9,7 +9,7 @@ export class FilterTextPipe implements PipeTransform {
     if (!value) return [];
     if (!text || text.length < 3) return value;
 
-    return _.filter(value, (item) => {
+    return _.filter(value, (item: any) => {
       if (!type) {
         return (
           JSON.stringify(item).toLowerCase().includes(text.toLowerCase())

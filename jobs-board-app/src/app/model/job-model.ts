@@ -5,16 +5,8 @@ export class JobModel extends BaseModel {
         JobId: number = 0;
         JobTitle: string = "";
         CompanyId: number = 0;
-        CompanyName: string = "";
-        JobDescription: string = ""
-        JobType: string = "";
-        Salary: string = "";
-}
-
-export class NewEditJobModel extends BaseModel {
-        JobId: number = 0;
-        JobTitle: string = "";
-        CompanyId: number = undefined;
+        CompanyName?: string = "";
+        CompanyLogo?: string = "";
         JobDescription: string = ""
         JobType: string = "";
         Salary: string = "";

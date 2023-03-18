@@ -51,7 +51,7 @@
                 <div (click)="gotoView(job.JobId)">
                     <div class="d-flex justify-content-between">
                         <div class="d-flex flex-row align-items-center">
-                            <div class="icon"> <i class="fab fa-{{getCompanyLogo(job.CompanyId)}}"></i> </div>
+                            <div class="icon"> <i class="fab fa-{{job.CompanyLogo}}"></i> </div>
                             <div class="ms-2 c-details">
                                 <h6 class="mb-0">{{job.CompanyName}}</h6><span>{{job.CreatedDate |
                                     posteddate}}</span>
