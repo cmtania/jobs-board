@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { CreateJobComponent } from './job/create-job/create-job.component';
 import { JobDetailsComponent } from './job/job-details/job-details.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PostedDatePipe } from './shared/pipe/postedDate-pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,7 +40,8 @@ import { JobDashboardComponent } from './job/job-dashboard/job-dashboard.compone
     AppRoutingModule,
     FormsModule,
     NgxSpinnerModule,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule
   ],
   exports: [PostedDatePipe,
             NgxSpinnerModule,

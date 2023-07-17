@@ -17,47 +17,55 @@
     <hr class="col-md-6">
         <div class="container mt-2 mb-3">
             <h4>Personal Information</h4>
-            <form class="form-horizontal" #registerForm="ngForm" ngNativeValidate>
+            <form class="form-horizontal" [formGroup]="registerForm">
                 <div class="form-group">
                     <label class="control-label col-md-3" for="pwd">First Name:</label>
                     <div class="col-md-6">
-                        <input [(ngModel)]="applicantData.FirstName" name="firstName" #firstName="ngModel" class="form-control"
-                            autocomplete="off" required />
+                        <input formControlName="FirstName"
+                         class="form-control" (blur)="validateField('FirstName')"
+                         [ngClass]="{ 'invalid': f['FirstName'].errors && f['FirstName'].errors }"
+                         autocomplete="off" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3" for="pwd">Middle Name:</label>
                     <div class="col-md-6">
-                        <input [(ngModel)]="applicantData.MiddleName" name="middleName" #middleName="ngModel" class="form-control"
-                            autocomplete="off" required />
+                        <input formControlName="MiddleName" 
+                        class="form-control" autocomplete="off" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3" for="pwd">Last Name:</label>
                     <div class="col-md-6">
-                        <input [(ngModel)]="applicantData.LastName" name="lastName" #lastName="ngModel" class="form-control"
-                            autocomplete="off" required />
+                        <input formControlName="LastName"
+                        (blur)="validateField('LastName')" 
+                        [ngClass]="{ 'invalid': f['LastName'].errors && f['LastName'].errors }"
+                        class="form-control" autocomplete="off" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="pwd">Age:</label>
                     <div class="col-md-6">
-                        <input [(ngModel)]="applicantData.Age" name="age" #age="ngModel" class="form-control"
-                            autocomplete="off" required numbersOnly />
+                        <input formControlName="Age"
+                        (blur)="validateField('Age')" 
+                        [ngClass]="{ 'invalid': f['Age'].errors && f['Age'].errors }"
+                        class="form-control" autocomplete="off" numbersOnly />
         
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-md-3" for="pwd">Address:</label>
                     <div class="col-md-6">
-                        <input [(ngModel)]="applicantData.Address" name="address" #address="ngModel" class="form-control"
-                            autocomplete="off" required />
+                        <input formControlName="Address"
+                        (blur)="validateField('Address')" 
+                        [ngClass]="{ 'invalid': f['Address'].errors && f['Address'].errors }"
+                        class="form-control" autocomplete="off" />
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="btn-control" align="right">
-                        <button *ngIf="isSaving == true" type="submit" class="btn btn-md btn-success" data-bs-toggle="modal"
-                            data-bs-target="#ConfirmationModal" [disabled]="!registerForm.form.valid">
+                        <button *ngIf="isSaving == true"  [ngClass]="{'field-disabled': !isValidForm }" type="submit" class="btn btn-md btn-success" data-bs-toggle="modal"
+                            data-bs-target="#ConfirmationModal" >
                             <i class="fas fa-check-circle"></i> Register</button>
                         <button *ngIf="!isSaving" class="btn btn-md btn-success" type="button" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

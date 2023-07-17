@@ -60,7 +60,7 @@ export class CreateJobComponent implements OnInit {
   }
 
   getCompany(): any {
-    let enumCompany = Object.keys(Company).map(key => Company[key]).filter(k => !(parseInt(k) >= 0));
+    let enumCompany = Object.keys(Company).map((key: any) => Company[key]).filter(k => !(parseInt(k) >= 0));
     //console.log(enumCompany);
     let num = 1;
     let company = [];
@@ -92,8 +92,6 @@ export class CreateJobComponent implements OnInit {
   }
 
   resetSubscription(): void{
-    if (this.subscription){
-      this.subscription.unsubscribe();
-    };
+      this.subscription?.unsubscribe();
   }
 }

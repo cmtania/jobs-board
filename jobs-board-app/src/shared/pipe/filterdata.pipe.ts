@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FilterDataPipe implements PipeTransform {
 
   transform(items:any[], value:string, column:any[]) :any {
-    let filterkeys = Object.keys(column).map(function(key) {
+    let filterkeys = Object.keys(column).map(function(key: any) {
       return column[key];
     });
     
