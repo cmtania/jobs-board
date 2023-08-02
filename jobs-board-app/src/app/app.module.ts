@@ -19,6 +19,7 @@ import { JobService } from '../app/services/job-services';
 import { ApplicantService } from './services/applicant.service';
 import { EditJobComponent } from './job/edit-job/edit-job.component';
 import { JobDashboardComponent } from './job/job-dashboard/job-dashboard.component';
+import { NumberFormatDirective } from './shared/directives/number-format.directive';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { JobDashboardComponent } from './job/job-dashboard/job-dashboard.compone
     PostedDatePipe,
     FilterDataPipe,
     NumberDirective,
-    FilterTextPipe
+    FilterTextPipe,
+    NumberFormatDirective
   ],
   imports: [
     BrowserModule,
@@ -42,6 +44,7 @@ import { JobDashboardComponent } from './job/job-dashboard/job-dashboard.compone
     NgxSpinnerModule,
     NgbModule,
     ReactiveFormsModule
+    
   ],
   exports: [PostedDatePipe,
             NgxSpinnerModule,

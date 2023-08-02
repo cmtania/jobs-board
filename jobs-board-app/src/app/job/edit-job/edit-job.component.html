@@ -47,15 +47,13 @@
     </div>
     <div class="col-md-6">
       <div class="btn-control" align="right">
-        <button *ngIf="isUpdating == true" type="submit" class="btn btn-md btn-success" data-bs-toggle="modal"
-          data-bs-target="#ConfirmationModal" [disabled]="!editJobForm.form.valid">
-          <span class="fa fa-save"></span> Update</button>
+        <button *ngIf="isUpdating == true" type="submit" class="save-button fw-bold" data-bs-toggle="modal"
+          data-bs-target="#ConfirmationModal" [disabled]="!editJobForm.form.valid"> Update</button>
         <button *ngIf="!isUpdating" class="btn btn-md btn-success" type="button" disabled>
           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Updating...
         </button>
-        <button type="button" class="btn btn-md btn-primary backtolist" (click)="backtoList()">
-          <span class="fa fa-arrow-circle-left"></span> Back To List</button>
+        <button type="button" class="cancel-button fw-bold" (click)="backtoList()"> Cancel</button>
       </div>
     </div>
 
@@ -70,10 +68,11 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to update this job?</h5>
+        <button type="button" class="btn-close dark-red" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="updateJob()"><i class="fas fa-check-circle"></i> Yes</button>
-        <button type="button" #closebutton class="btn btn-primary" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Cancel</button>
+        <button type="button" class="save-button fw-bold" (click)="updateJob()">Yes</button>
+        <button type="button" #closebutton class="cancel-button fw-bold" data-bs-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>

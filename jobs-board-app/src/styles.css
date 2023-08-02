@@ -1,4 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
 body {
     background-color: #eee
 }
@@ -31,5 +37,45 @@ body {
     border: 2px solid rgb(252, 87,87);
 }
 .ng-valid[required], .ng-valid[required]{
-    border-left: 5px solid #42A948;
+    border-left: 5px solid #96D197;
 }
+
+.save-button {
+    padding: 10px 20px;
+    background-color: #C1E1C1;
+    color: #2b482d;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .save-button:hover {
+    background-color: #aac7aa;
+  }
+  
+  .cancel-button {
+    padding: 10px 20px;
+    background-color: #FAA0A0;
+    color: #925151;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 8px;
+  }
+  
+  .cancel-button:hover {
+    background-color: #dd8f8f;
+  }
+
+  .btn-disable {
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #8b8b8a;
+    color: #4d4d4d;
+  }
+
+  .dark-red {
+    color: #925151 !important;
+  }
