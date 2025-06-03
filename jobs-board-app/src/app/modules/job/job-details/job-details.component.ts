@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSpinner, NgxSpinnerService } from 'ngx-spinner';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription, take, tap } from 'rxjs';
 import { JobModel } from '../../model/job-model';
 import { Company } from '../../model/company.enum';
 import { JobService } from '../../services/job-services';
+import { Store } from '@ngxs/store';
+import { HideSpinner, ShowSpinner } from '../../state-management/actions/spinner.action';
 
 @Component({
   selector: 'app-job-details',
@@ -26,31 +27,31 @@ export class JobDetailsComponent implements OnInit {
   public subscription: Subscription;
   
   constructor(private _jobService: JobService,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _spinner: NgxSpinnerService) {
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _store: Store) {
       this.job = new JobModel();
       this.jobId = this._route.snapshot.params.id;
      }
 
   ngOnInit(): void {
     this.getJob();
-    let datee = new Date();
-    console.log(datee,"date now");
-    console.log(datee.toISOString())
+    let date = new Date();
+    console.log(date,"date now");
+    console.log(date.toISOString())
   }
 
   getJob(){
-    this._spinner.show();
-    this.resetSubscription();
-    this._jobService.getJob(this.jobId).subscribe( data =>{
-      this.job = data;
-      this._spinner.hide();
-    },err => {
-      console.log(err);
-      this._spinner.hide();
-      this._router.navigateByUrl("not-found");
-    })
+    this._store.dispatch(new ShowSpinner());
+    this._jobService.getJob(this.jobId).pipe(
+      take(1),
+      tap((resp: any) => {
+         this.job = resp;
+      }),
+      finalize(() => {
+        this._store.dispatch(new HideSpinner());
+      })
+    ).subscribe();
   }
 
   updateJob(): void{
@@ -58,22 +59,22 @@ export class JobDetailsComponent implements OnInit {
     this.isUpdating = true;
     this.isSuccessNotif = true;
     this.job.JobDescription = this.jobDescription;
-    this._jobService.putJob(this.job).subscribe(() => {
-      console.log("Saved.");
+    this._jobService.putJob(this.job).pipe(
+    take(1),
+    tap(() => {
       this.isSuccessNotif = false;
       this.getJob();
       this.hideJd = false;
       this.isLoading = true;
+     
+    }),
+    finalize(() => {
       this.closeModal();
 
-      setTimeout(() =>{
+        setTimeout(() =>{
         this.isSuccessNotif = true;
       }, 2000);
-    },
-    err => {
-      console.log(err);
-      this.closeModal();
-    })
+    })).subscribe();
 }
 
 resetSubscription(): void{

@@ -1,58 +1,32 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from "@angular/common/http";
+import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { SpinnerState } from "./modules/state-management/states/spinner.state";
+import { SpinnerComponent } from "./shared/spinner/spinner.component";
+import { NgxsModule } from "@ngxs/store";
 
-import { AppRoutingModule } from './app-routing.module';
-import { CreateJobComponent } from './job/create-job/create-job.component';
-import { JobDetailsComponent } from './job/job-details/job-details.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PostedDatePipe } from './shared/pipe/postedDate-pipe';
-import { NgxSpinnerModule } from 'ngx-spinner';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FilterDataPipe } from '../shared/pipe/filterdata.pipe';
-import { NumberDirective } from './shared/directives/numbers-only.directive';
-import { FilterTextPipe } from './shared/pipe/filter-pipe.pipe';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { RegisterComponent } from './applicant/register/register.component';
-import { JobService } from '../app/services/job-services';
-import { ApplicantService } from './services/applicant.service';
-import { EditJobComponent } from './job/edit-job/edit-job.component';
-import { JobDashboardComponent } from './job/job-dashboard/job-dashboard.component';
-import { NumberFormatDirective } from './shared/directives/number-format.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
-    JobDashboardComponent,
-    CreateJobComponent,
-    EditJobComponent,
-    JobDetailsComponent,
-    RegisterComponent,
-    PostedDatePipe,
-    FilterDataPipe,
-    NumberDirective,
-    FilterTextPipe,
-    NumberFormatDirective
+    SpinnerComponent
   ],
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
     AppRoutingModule,
+    HttpClientModule,
     FormsModule,
-    NgxSpinnerModule,
     NgbModule,
-    ReactiveFormsModule
-    
+    ReactiveFormsModule,
+    NgxsModule.forRoot([SpinnerState], { developmentMode: /** !environment.production */ false })
+
   ],
-  exports: [PostedDatePipe,
-            NgxSpinnerModule,
-            BrowserAnimationsModule,
-            FilterDataPipe,
-            NumberDirective,
-            FilterTextPipe],
-  providers: [JobService, ApplicantService],
+  exports: [],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

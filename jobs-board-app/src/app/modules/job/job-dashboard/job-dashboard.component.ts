@@ -1,14 +1,15 @@
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, OperatorFunction, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, timeout } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, take, tap, timeout } from 'rxjs/operators';
 import { Company } from '../../model/company.enum';
 import { JobModel } from '../../model//job-model';
 import { JobService } from '../../services/job-services';
 import { SearchQuery } from '../../interfaces/search-query';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as _ from 'lodash';
+import { Store } from '@ngxs/store';
+import { HideSpinner, ShowSpinner } from '../../state-management/actions/spinner.action';
 
 @Component({
   selector: 'job-dashboard',
@@ -44,9 +45,9 @@ export class JobDashboardComponent implements OnInit {
   typeahead: OperatorFunction<string, readonly string[]>;
 
   constructor(private _jobService: JobService,
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _spinner: NgxSpinnerService) {
+    private readonly _route: ActivatedRoute,
+    private readonly _router: Router,
+    private readonly _store: Store,) {
       this.typeahead = (text$: Observable<string>) =>
       text$.pipe(
         debounceTime(200),
@@ -75,25 +76,21 @@ export class JobDashboardComponent implements OnInit {
   }
 
   getJobs() {
-    this._spinner.show();
-    this.unsubscribe();
-    this.subscription = this._jobService.getJobs().subscribe({
-      next: (data: any) => {
-        this.jobs = data;
-      },
-      error: (err) => {
-        console.log(err);
-        this._spinner.hide();
-      },
-      complete: () => {
-        this.jobs.map((x) => {
+    this._store.dispatch(new ShowSpinner());
+    this._jobService.getJobs().pipe(
+      take(1),
+      tap((resp: any) => {
+         this.jobs = resp;
+      }),
+      finalize(() => {
+         this.jobs.map((x) => {
           return x.CompanyName = this.getCompanyName(x.CompanyId),
             x.CompanyLogo = this.getCompanyLogo(x.CompanyId);
         });
         this.searchAll();   
-        this._spinner.hide();
-      },
-    });
+        this._store.dispatch(new HideSpinner());
+      })
+    ).subscribe();
   }
 
   searchAll(): void{
@@ -152,20 +149,21 @@ export class JobDashboardComponent implements OnInit {
   }
 
   purgeJob(): void {
-    this._spinner.show();
+   this._store.dispatch(new ShowSpinner());
 
     this.unsubscribe();
 
-    this.subscription = this._jobService.purgeJob(this.jobId)
-      .subscribe(() => {
-      this.closeModal();
-      this.getJobs();
-      this.closeModal();
-      this._spinner.hide();
-    }, err => {
-      console.log(err);
-      this._spinner.hide();
-    })
+    this._jobService.purgeJob(this.jobId).pipe(
+      take(1),
+      tap(() => {
+         this.closeModal();
+      }),
+      finalize(() => {
+        this.getJobs();
+        this._store.dispatch(new HideSpinner());
+      })
+    ).subscribe();
+  
   }
 
   closeModal(): void {

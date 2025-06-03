@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { Company } from 'src/app/model/company.enum';
-import { JobModel } from 'src/app/model/job-model';
-import { JobService } from 'src/app/services/job-services';
+import { Company } from 'src/app/modules/model/company.enum';
+import { JobModel } from 'src/app/modules/model/job-model';
 import { SearchQuery } from '../interfaces/search-query';
 import * as _ from 'lodash';
+import { JobService } from '../services/job-services';
+import { Store } from '@ngxs/store';
+import { HideSpinner, ShowSpinner } from '../state-management/actions/spinner.action';
 
 @Component({
   selector: 'app-home',
@@ -41,10 +42,10 @@ export class HomeComponent implements OnInit {
 
   typeahead: OperatorFunction<string, readonly string[]>;
 
-  constructor(private _jobService: JobService,
+  constructor(private readonly _jobService: JobService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _spinner: NgxSpinnerService) {
+    private readonly _store: Store) {
       this.typeahead = (text$: Observable<string>) =>
       text$.pipe(
         debounceTime(200),
@@ -75,14 +76,14 @@ export class HomeComponent implements OnInit {
   }
 
   getJobs() {
-    this._spinner.show();
+    this._store.dispatch(new ShowSpinner());
     this._jobService.getJobs().subscribe(res => {
       //console.log(res);
-      this.jobs = res.sort((a: any, b: any) => b.JobId - a.JobId);;
-      this._spinner.hide();
+      this.jobs = (res as any[]).sort((a: any, b: any) => b.JobId - a.JobId);
+       this._store.dispatch(new HideSpinner());
     }, err => {
       console.log(err);
-      this._spinner.hide();
+      this._store.dispatch(new HideSpinner());
     },()=>{
       this.jobs.forEach(x => {
          x.CompanyName = this.getCompanyName(x.CompanyId);
@@ -144,15 +145,15 @@ export class HomeComponent implements OnInit {
   }
 
   purgeJob() {
-    this._spinner.show();
+    this._store.dispatch(new ShowSpinner());
     this._jobService.purgeJob(this.jobId).subscribe(() => {
       this.closeModal();
       this.getJobs();
       this.closeModal();
-      this._spinner.hide();
+      this._store.dispatch(new HideSpinner());
     }, err => {
       console.log(err);
-      this._spinner.hide();
+      this._store.dispatch(new HideSpinner());
     })
   }
 

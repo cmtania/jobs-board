@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription, take, tap } from 'rxjs';
 import { JobModel } from '../../model/job-model';
 import { Company } from '../../model/company.enum';
 import { JobService } from '../../services/job-services';
-import { join } from 'lodash';
+import { Store } from '@ngxs/store';
+import { HideSpinner, ShowSpinner } from '../../state-management/actions/spinner.action';
 
 @Component({
   selector: 'app-edit-job',
@@ -25,8 +25,9 @@ export class EditJobComponent implements OnInit {
   @ViewChild('editJobForm') editJobForm!: NgForm;
   @ViewChild('closebutton') closebutton: any;
   
-  constructor(private _jobService: JobService,
-    private _spinner: NgxSpinnerService,
+  constructor(
+    private readonly _jobService: JobService,
+    private readonly _store: Store,
     private _route: ActivatedRoute,
     private _router: Router,) {
       this.editJobVm = new JobModel();
@@ -38,35 +39,33 @@ export class EditJobComponent implements OnInit {
   }
 
   getJob(){
-    this._spinner.show();
-    this.unsubscription();
-    this.subscription = this._jobService.getJob(this.jobId)
-    .subscribe({
-      next: (data: JobModel) => {
-        this.editJobVm = data;
-        this._spinner.hide();
-      },
-      error: (err) => {
-        console.log(err);
-        this._spinner.hide();
-        this._router.navigateByUrl("not-found");
-      }
-    });
+    this._store.dispatch(new ShowSpinner());
+    this._jobService.getJob(this.jobId)
+    .pipe(
+      take(1),
+      tap((resp: any) => {
+        this.editJobVm = resp;
+      }),
+      finalize(() => {
+        this._store.dispatch(new HideSpinner());
+      })
+    ).subscribe();
   }
 
   updateJob(){
-    this.isUpdating = false;
-    this.unsubscription();
-    this.subscription = this._jobService.putJob(this.editJobVm).subscribe(() => {
-        console.log("Saved.");
-        this.isUpdating =true;
+    this._store.dispatch(new ShowSpinner());
+    this._jobService.putJob(this.editJobVm).pipe(
+      take(1),
+      tap(() => {
+        this._store.dispatch(new HideSpinner());
+      }),
+      finalize(() => {
         this.editJobForm.reset();
         this.backtoList();
         this.closeModal();
-      },
-        (      err: any) => { console.log(err);
-              this.isUpdating =true;
+       
       })
+    ).subscribe();
   }
 
   getCompany(): any {
