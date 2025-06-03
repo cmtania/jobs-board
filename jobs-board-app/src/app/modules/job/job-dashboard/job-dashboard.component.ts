@@ -68,11 +68,13 @@ export class JobDashboardComponent implements OnInit {
   }
 
   searchTypeChange() {
-    if(!this.search.type){
-      this.searchAll();
-    } else {
+    if(this.search.type){
       this.suggestions = _.unionBy(_.map(this.jobs, this.search.type)); 
+      
+      return;
     }
+
+    this.searchAll();
   }
 
   getJobs() {

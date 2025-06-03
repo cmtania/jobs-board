@@ -20,7 +20,6 @@ import { HomeComponent } from "../home/home.component";
 @NgModule({
   imports: [
     CommonModule,
-    BrowserModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,

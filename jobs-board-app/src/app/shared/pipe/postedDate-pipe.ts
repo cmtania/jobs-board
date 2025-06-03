@@ -10,16 +10,17 @@ export class PostedDatePipe implements PipeTransform {
     const seconds = Math.floor((Date.now() - postedDateDto.getTime()) / 1000);
 
     let interval = seconds / 31536000;
-    if (interval > 1) {
+    console.log("interval: ", interval);
+    if (interval >= 1) {
       let y = " years ago";
-      if(interval = 1 ) y = " year ago";
+      if(Math.floor(interval) === 1 ) y = " year ago";
       return Math.floor(interval).toString().concat(y);
     }
 
     interval = seconds / 2592000;
     if (interval > 1) {
       let m = " months ago";
-      if(interval = 1 ) m = " month ago";
+      if(interval === 1 ) m = " month ago";
       return Math.floor(interval).toString().concat(m);
     }
 
