@@ -10,6 +10,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import * as _ from 'lodash';
 import { Store } from '@ngxs/store';
 import { HideSpinner, ShowSpinner } from '../../state-management/actions/spinner.action';
+import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { CreateJobComponent } from '../create-job-modal/create-job.component';
 
 @Component({
   selector: 'job-dashboard',
@@ -40,14 +42,18 @@ export class JobDashboardComponent implements OnInit {
     type: '',
     text: '',
   };
+
+  bsModalRef?: BsModalRef;
   
 
   typeahead: OperatorFunction<string, readonly string[]>;
 
-  constructor(private _jobService: JobService,
+  constructor(
+    private _jobService: JobService,
     private readonly _route: ActivatedRoute,
     private readonly _router: Router,
-    private readonly _store: Store,) {
+    private readonly _store: Store,
+    private readonly _modalService: BsModalService) {
       this.typeahead = (text$: Observable<string>) =>
       text$.pipe(
         debounceTime(200),
@@ -111,8 +117,22 @@ export class JobDashboardComponent implements OnInit {
     return Company[companyId].toLowerCase();
   }
 
-  gotoCreateJob():void {
-    this._router.navigate(['create-job']);
+  // gotoCreateJob():void {
+  //   this._router.navigate(['create-job']);
+  // }
+
+  openCreateJobModal() {
+    const initialState: ModalOptions = {
+      initialState: {
+        title: "Create Job",
+      },
+      backdrop: 'static',
+      keyboard: false,
+    };
+    this.bsModalRef = this._modalService.show(
+      CreateJobComponent,
+      initialState
+    );
   }
 
   gotoRegister() {

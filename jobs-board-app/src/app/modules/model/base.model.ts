@@ -5,10 +5,9 @@ export class BaseModel {
     UpdatedDate: string ="";
     Purge: string = "N";
 
-    getCreateDate(){
+    getCreateDate(): string | undefined {
         return new Date().toISOString();
     }
 }
-
 
 

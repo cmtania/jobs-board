@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <span class="modal-title">New Job</span>
+    <button type="button" class="btn-close close pull-right" aria-label="Close">
+      <span aria-hidden="true" class="visually-hidden">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="container">
+      <form [formGroup]="createJobForm">
+        <div class="form-group div-form-group">
+          <div class="label-container">
+            <label for="JobTitle">Job Title</label>
+          </div>
+          <input type="text" class="form-control form-control-sm" id="JobTitle" formControlName="JobTitle" >
+        </div>
+        <div class="form-group div-form-group">
+          <div class="label-container">
+            <label for="Company">Company</label>
+          </div>
+          <select id="ProductCategory" class="form-control form-control-sm" formControlName="Company">
+              <option *ngFor="let company of getCompany()" value="{{company.id}}">{{company.value}}</option>
+          </select>
+        </div>
+            <div class="form-group div-form-group">
+          <div class="label-container">
+            <label for="JobType">Job Type</label>
+          </div>
+          <select id="JobType" class="form-control form-control-sm" formControlName="JobType">
+              <option value="PartTime">Part Time</option>
+              <option value="FullTime">Full Time</option>
+          </select>
+        </div>
+         <div class="form-group div-form-group">
+          <div class="label-container">
+            <label for="JobDescription">Description</label>
+          </div>
+          <textarea class="form-control form-control-sm" id="JobDescription" formControlName="JobDescription" ></textarea>  
+        </div>
+
+        <div class="form-group div-form-group">
+          <div class="label-container">
+            <label for="Salary">Salary</label>
+          </div>
+          <input type="text" class="form-control form-control-sm" id="Salary" formControlName="Salary" >
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-custom-close">Cancel</button>
+    <button type="button" class="btn btn-save" (click)="SaveJob()" [disabled]="!createJobForm.valid">Save</button>
+  </div>

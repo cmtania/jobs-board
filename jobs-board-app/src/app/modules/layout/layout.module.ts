@@ -3,7 +3,6 @@ import { LayoutComponent } from "./layout.component";
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { CreateJobComponent } from "../job/create-job/create-job.component";
 import { EditJobComponent } from "../job/edit-job/edit-job.component";
 import { JobDetailsComponent } from "../job/job-details/job-details.component";
 import { JobService } from "../services/job-services";
@@ -15,6 +14,9 @@ import { NumberDirective } from "src/app/shared/directives/numbers-only.directiv
 import { FilterTextPipe } from "src/app/shared/pipe/filter-pipe.pipe";
 import { PostedDatePipe } from "src/app/shared/pipe/postedDate-pipe";
 import { FilterDataPipe } from "src/shared/pipe/filterdata.pipe";
+import { CreateJobComponent } from "../job/create-job-modal/create-job.component";
+import { BsModalService, ModalModule } from "ngx-bootstrap/modal";
+
 @NgModule({
   imports: [
     CommonModule,
@@ -22,7 +24,9 @@ import { FilterDataPipe } from "src/shared/pipe/filterdata.pipe";
     FormsModule,
     ReactiveFormsModule,
     LayoutRoutingModule,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule,
+    ModalModule
   ],
   declarations: [
     LayoutComponent,
@@ -39,6 +43,6 @@ import { FilterDataPipe } from "src/shared/pipe/filterdata.pipe";
             FilterDataPipe,
             NumberDirective,
             FilterTextPipe],  
-  providers: [JobService, ApplicantService],
+  providers: [BsModalService],
 })
 export class LayoutModule { }
