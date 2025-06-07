@@ -1,6 +1,6 @@
-<title>Job Details</title>
 <div class="container mt-5 mb-3">
     <div class="row">
+      <button type="button" class="btn-back" (click)="backtoList()"><i class="fas fa-long-arrow-alt-left"></i> Back</button>
         <div class="card p-3 mb-2">
             <div class="d-flex justify-content-between">
                 <div class="d-flex flex-row align-items-center">
@@ -20,7 +20,9 @@
                 <h3 class="heading">{{job.JobTitle}}</h3><br>
                 <span>Salary</span>
                 <h3 class="heading">{{job.Salary | number}}</h3><br>
-                <span>Job Description <i (click)="editJD()" class="fas fa-pen-square fa-1x edit-icon"></i></span>
+                <span>Job Description <i (click)="editJD()" class="fas fa-pen-square fa-1x edit-icon"></i>
+                  <button *ngIf="isUpdating == false" type="submit" class="btn-update" data-bs-toggle="modal"
+                                                      data-bs-target="#ConfirmationModal" > Update</button></span>
                 <h4 class="heading" *ngIf="hideJd == false">{{job.JobDescription}}</h4>
                 <div class="col-md-6" *ngIf="isUpdating == false">
                     <textarea [(ngModel)]="jobDescription" name="JobDescription" #JobDescription="ngModel"
@@ -31,15 +33,10 @@
         </div>
     </div>
     <div align="right" class="btn-control">
-        <button *ngIf="isUpdating == false" type="submit" class="btn btn-md btn-success" data-bs-toggle="modal"
-          data-bs-target="#ConfirmationModal" >
-          <span class="fa fa-save"></span> Update</button>
         <button *ngIf="!isLoading" class="btn btn-md btn-success" type="button" disabled>
           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           Updating...
         </button>
-        <button type="button" class="btn btn-md btn-primary backtolist" (click)="backtoList()">
-            <span class="fa fa-arrow-circle-left"></span> Back To List</button>
     </div>
     <div class="row success" *ngIf="!isSuccessNotif"> 
             <div class="alert alert-success" role="alert">
@@ -58,8 +55,8 @@
         <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to update the Job Description?</h5>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="updateJob()"><i class="fas fa-check-circle"></i> Yes</button>
-        <button type="button" #closebutton class="btn btn-primary" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Cancel</button>
+        <button type="button" #closebutton class="btn-back" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i> Cancel</button>
+        <button type="button" class="btn-yes" (click)="updateJob()"><i class="fas fa-check-circle"></i> Yes</button>
       </div>
     </div>
   </div>

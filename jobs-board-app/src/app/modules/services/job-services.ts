@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { JobModel } from '../model/job-model';
 import { environment } from 'src/environments/environment';
 
@@ -21,23 +21,22 @@ export class JobService {
   }
 
   getJobs() {
-    return this._http.get(this._jobpostedApi);
+    return this._http.get(this._jobpostedApi).pipe(
+      catchError((err: any) => throwError(() => err)));
   }
 
   postJob(job: JobModel) {
-    return this._http.post(this._jobpostedApi, job);
+    return this._http.post(this._jobpostedApi, job).pipe(
+      catchError((err: any) => throwError(() => err)));
   }
 
   putJob(job: JobModel) {
-    return this._http.put(this._jobpostedApi + "/" + job.JobId, job);
+    return this._http.put(this._jobpostedApi + "/" + job.JobId, job).pipe(
+      catchError((err: any) => throwError(() => err)));
   }
 
   purgeJob(jobId: number) {
-    return this._http.delete(this._jobpostedApi + "/" + jobId);
-  }
-
-  private handleError(err: any): void{
-    console.log(err);
-    throw Error(err);
+    return this._http.delete(this._jobpostedApi + "/" + jobId).pipe(
+      catchError((err: any) => throwError(() => err)));
   }
 }

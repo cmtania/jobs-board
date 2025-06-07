@@ -1,13 +1,9 @@
 export class BaseModel {
-    CreatedDate: string = this.getCreateDate();
+    CreatedDate: string = "";
     CreatedBy: string= "";
     UpdatedBy: string = "";
     UpdatedDate: string ="";
     Purge: string = "N";
-
-    getCreateDate(): string | undefined {
-        return new Date().toISOString();
-    }
 }
 
 

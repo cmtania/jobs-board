@@ -2,10 +2,44 @@
     padding-top: 15px;
 }
 
-.backtolist{
-    margin-left: 10px;
-}
-
 .success {
     padding-top: 10px;
-  }
+}
+
+label {
+    font-size: 14px;
+}
+
+.btn-back {
+    cursor: pointer;
+    color: #AA4A44;
+    width: auto;
+    border-radius: 10px;
+    border: 1px solid #AA4A44;
+    font-size: 14px;
+
+    &:hover {
+      color: #fff;
+      background-color: #AA4A44;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+      transition: all 0.3s ease;
+    }
+}
+
+.btn-update {
+    background-color: #87af8d;
+    cursor: pointer;
+    color: #ffff;
+    width: 69px;
+    height: 33px;
+    border-radius: 10px;
+    border: 1px solid #87af8d;
+    font-size: 13px;
+
+    &:hover {
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+      transition: all 0.3s ease;
+    }
+}

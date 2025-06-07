@@ -1,10 +1,11 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, Subscription, take, tap } from 'rxjs';
+import { finalize, take } from 'rxjs';
 import { Company } from '../../model/company.enum';
 import { JobService } from '../../services/job-services';
 import { JobModel } from '../../model/job-model';
+import { BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-create-job',
@@ -17,22 +18,20 @@ export class CreateJobComponent implements OnInit {
   companyList: any;
   isSaving: Boolean = true;
   isSuccessNotif: Boolean = true;
-  public subscription: Subscription;
 
   createJobForm: FormGroup;
 
   constructor(
     private readonly fb: FormBuilder,
-    private _jobService: JobService,
-    private _route: ActivatedRoute,
-    private _router: Router
+    private readonly _jobService: JobService,
+    public bsModalRef: BsModalRef
   ) {
     this.createJobForm = this.fb.group({
       JobTitle: ['', [Validators.required]],
       Company: ['', [Validators.required]],
       JobType: ['', [Validators.required]],
       JobDescription: ['', [Validators.required]],
-      Salary: [0, [Validators.required, Validators.min(5)]],
+      Salary: [0, [Validators.required, Validators.min(1)]],
     });
   }
 
@@ -50,7 +49,7 @@ export class CreateJobComponent implements OnInit {
       JobDescription: this.createJobForm.value.JobDescription,
       Salary: this.createJobForm.value.Salary,
       CreatedBy: 'hradmin',
-      CreatedDate: '',
+      CreatedDate: new Date().toISOString(),
       UpdatedBy: '',
       UpdatedDate: '',
       Purge: 'N',
@@ -62,6 +61,7 @@ export class CreateJobComponent implements OnInit {
         take(1),
         finalize(() => {
           this.createJobForm.reset();
+          this.bsModalRef.hide();
         })
       ).subscribe();
   }
@@ -77,10 +77,6 @@ export class CreateJobComponent implements OnInit {
       num++;
     }
     return company;
-  }
-
-  backtoList(): void {
-    this._router.navigateByUrl('/job-dashboard');
   }
 
   closeModal() {

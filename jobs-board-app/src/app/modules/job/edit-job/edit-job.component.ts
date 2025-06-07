@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subscription, take, tap } from 'rxjs';
 import { JobModel } from '../../model/job-model';
@@ -15,46 +15,71 @@ import { HideSpinner, ShowSpinner } from '../../state-management/actions/spinner
 })
 export class EditJobComponent implements OnInit {
 
-  editJobVm: JobModel;
-  isUpdating: Boolean = true;
+  editJobForm!: FormGroup;
+  isUpdating: boolean = true;
   jobId: number;
-  isSuccessNotif: Boolean = true;
-  public subscription: Subscription;
+  isSuccessNotif: boolean = true;
+  public subscription: Subscription = new Subscription();
+  companyList: any[] = [];
 
-
-  @ViewChild('editJobForm') editJobForm!: NgForm;
-  @ViewChild('closebutton') closebutton: any;
-  
   constructor(
+    private readonly fb: FormBuilder,
     private readonly _jobService: JobService,
     private readonly _store: Store,
     private _route: ActivatedRoute,
-    private _router: Router,) {
-      this.editJobVm = new JobModel();
-      this.jobId = this._route.snapshot.params.id;
-     }
+    private _router: Router
+  ) {
+    this.jobId = this._route.snapshot.params.id;
+  }
 
   ngOnInit(): void {
+    this.companyList = this.getCompany();
+    this.initForm();
     this.getJob();
   }
 
-  getJob(){
-    this._store.dispatch(new ShowSpinner());
-    this._jobService.getJob(this.jobId)
-    .pipe(
-      take(1),
-      tap((resp: any) => {
-        this.editJobVm = resp;
-      }),
-      finalize(() => {
-        this._store.dispatch(new HideSpinner());
-      })
-    ).subscribe();
+  initForm(): void {
+    this.editJobForm = this.fb.group({
+      JobTitle: ['', [Validators.required]],
+      CompanyId: [undefined, [Validators.required]],
+      JobType: ['', [Validators.required]],
+      JobDescription: ['', [Validators.required]],
+      Salary: [1, [Validators.required, Validators.min(1)]],
+    });
   }
 
-  updateJob(){
+  getJob() {
     this._store.dispatch(new ShowSpinner());
-    this._jobService.putJob(this.editJobVm).pipe(
+    this._jobService.getJob(this.jobId)
+      .pipe(
+        take(1),
+        tap((resp: JobModel) => {
+          this.editJobForm.patchValue({
+            JobTitle: resp.JobTitle,
+            CompanyId: resp.CompanyId,
+            JobType: resp.JobType,
+            JobDescription: resp.JobDescription,
+            Salary: resp.Salary
+          });
+        }),
+        finalize(() => {
+          this._store.dispatch(new HideSpinner());
+        })
+      ).subscribe();
+  }
+
+  updateJob() {
+    if (this.editJobForm.invalid) return;
+    this._store.dispatch(new ShowSpinner());
+    const updatedJob: JobModel = {
+      ...this.editJobForm.value,
+      JobId: this.jobId,
+      UpdatedBy: 'hradmin',
+      UpdatedDate: new Date().toISOString(),
+      CreatedDate: new Date().toISOString(),
+      Purge: 'N'
+    };
+    this._jobService.putJob(updatedJob).pipe(
       take(1),
       tap(() => {
         this._store.dispatch(new HideSpinner());
@@ -62,35 +87,28 @@ export class EditJobComponent implements OnInit {
       finalize(() => {
         this.editJobForm.reset();
         this.backtoList();
-        this.closeModal();
-       
       })
     ).subscribe();
   }
 
-  getCompany(): any {
-    let enumCompany = Object.keys(Company).map((key: any) => Company[key]).filter(k => !(parseInt(k) >= 0));
-    //console.log(enumCompany);
+  getCompany(): any[] {
+    let enumCompany = Object.keys(Company)
+      .map((key: any) => Company[key])
+      .filter(k => !(parseInt(k) >= 0));
     let num = 1;
     let res = [];
     for (const key in enumCompany) {
-      res.push({ id: num, value: enumCompany[key]});
+      res.push({ id: num, value: enumCompany[key] });
       num++;
     }
-
     return res;
   }
 
-  closeModal(){
-    this.closebutton.nativeElement.click();
-  }
-
-  backtoList(){
+  backtoList() {
     this._router.navigateByUrl("/job-dashboard");
   }
 
-  unsubscription(): void{
+  ngOnDestroy(): void {
     this.subscription?.unsubscribe();
   }
-
 }

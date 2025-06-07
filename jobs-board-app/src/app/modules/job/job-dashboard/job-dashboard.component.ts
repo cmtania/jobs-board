@@ -117,10 +117,6 @@ export class JobDashboardComponent implements OnInit {
     return Company[companyId].toLowerCase();
   }
 
-  // gotoCreateJob():void {
-  //   this._router.navigate(['create-job']);
-  // }
-
   openCreateJobModal() {
     const initialState: ModalOptions = {
       initialState: {
