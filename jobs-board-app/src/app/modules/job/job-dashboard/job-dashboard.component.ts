@@ -1,4 +1,3 @@
-
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, OperatorFunction, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, finalize, map, take, tap, timeout } from 'rxjs/operators';
@@ -90,6 +89,7 @@ export class JobDashboardComponent implements OnInit {
       take(1),
       tap((resp: any) => {
          this.jobs = resp;
+          this.sortByCreatedDate();
       }),
       finalize(() => {
          this.jobs.map((x) => {
@@ -159,5 +159,14 @@ export class JobDashboardComponent implements OnInit {
 
   closeModal(): void {
     this.closebutton.nativeElement.click();
+  }
+
+  private sortByCreatedDate(desc: boolean = true) {
+    if (!this.jobs || this.jobs.length === 0) return;
+    this.jobs = this.jobs.slice().sort((a, b) => {
+      const dateA = new Date(a.CreatedDate).getTime();
+      const dateB = new Date(b.CreatedDate).getTime();
+      return desc ? dateB - dateA : dateA - dateB;
+    });
   }
 }
