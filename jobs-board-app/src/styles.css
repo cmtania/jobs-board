@@ -17,13 +17,6 @@ body {
     font-weight: bold;
   }
 
-
-
-/* .close{
-    text-shadow: none;
-    color: white;
-} */
-
 .modal-header .close {
     margin-top: 7px;
 }
@@ -40,42 +33,6 @@ body {
     border-left: 5px solid #96D197;
 }
 
-.save-button {
-    padding: 10px 20px;
-    background-color: #C1E1C1;
-    color: #2b482d;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .save-button:hover {
-    background-color: #aac7aa;
-  }
-  
-  .cancel-button {
-    padding: 10px 20px;
-    background-color: #FAA0A0;
-    color: #925151;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    margin-left: 8px;
-  }
-  
-  .cancel-button:hover {
-    background-color: #dd8f8f;
-  }
-
-  .btn-disable {
-    cursor: not-allowed;
-    pointer-events: none;
-    background-color: #8b8b8a;
-    color: #4d4d4d;
-  }
-
-  .dark-red {
-    color: #925151 !important;
-  }
+.dark-red {
+  color: #925151 !important;
+}

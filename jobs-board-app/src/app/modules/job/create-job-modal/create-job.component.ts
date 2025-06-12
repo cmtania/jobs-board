@@ -44,7 +44,7 @@ export class CreateJobComponent implements OnInit {
     const newJob: JobModel = {
       JobId: 0,
       JobTitle: this.createJobForm.value.JobTitle,
-      CompanyId: this.createJobForm.value.Company,
+      CompanyId: parseInt(this.createJobForm.value.Company, 10),
       JobType: this.createJobForm.value.JobType,
       JobDescription: this.createJobForm.value.JobDescription,
       Salary: this.createJobForm.value.Salary,

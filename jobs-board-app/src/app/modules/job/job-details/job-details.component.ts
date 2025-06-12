@@ -6,6 +6,7 @@ import { Company } from '../../model/company.enum';
 import { JobService } from '../../services/job-services';
 import { Store } from '@ngxs/store';
 import { HideSpinner, ShowSpinner } from '../../state-management/actions/spinner.action';
+import { CommonService } from '../../services/common.service';
 
 @Component({
   selector: 'app-job-details',
@@ -26,10 +27,12 @@ export class JobDetailsComponent implements OnInit {
 
   public subscription: Subscription;
   
-  constructor(private _jobService: JobService,
+  constructor(
+    private _jobService: JobService,
     private readonly _route: ActivatedRoute,
     private readonly _router: Router,
-    private readonly _store: Store) {
+    private readonly _store: Store,
+    private readonly _commonService: CommonService) {
       this.job = new JobModel();
       this.jobId = this._route.snapshot.params.id;
      }
@@ -47,6 +50,7 @@ export class JobDetailsComponent implements OnInit {
       take(1),
       tap((resp: any) => {
          this.job = resp;
+         this.job.CompanyLogo = this._commonService.getCompanyLogo(this.job.CompanyId);
       }),
       finalize(() => {
         this._store.dispatch(new HideSpinner());

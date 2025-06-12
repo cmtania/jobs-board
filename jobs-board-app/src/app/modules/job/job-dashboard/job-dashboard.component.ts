@@ -12,6 +12,7 @@ import { Store } from '@ngxs/store';
 import { HideSpinner, ShowSpinner } from '../../state-management/actions/spinner.action';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CreateJobComponent } from '../create-job-modal/create-job.component';
+import { CommonService } from '../../services/common.service';
 
 @Component({
   selector: 'job-dashboard',
@@ -50,10 +51,10 @@ export class JobDashboardComponent implements OnInit {
 
   constructor(
     private _jobService: JobService,
-    private readonly _route: ActivatedRoute,
     private readonly _router: Router,
     private readonly _store: Store,
-    private readonly _modalService: BsModalService) {
+    private readonly _modalService: BsModalService,
+    private readonly _commonService: CommonService) {
       this.typeahead = (text$: Observable<string>) =>
       text$.pipe(
         debounceTime(200),
@@ -93,7 +94,7 @@ export class JobDashboardComponent implements OnInit {
       finalize(() => {
          this.jobs.map((x) => {
           return x.CompanyName = this.getCompanyName(x.CompanyId),
-            x.CompanyLogo = this.getCompanyLogo(x.CompanyId);
+            x.CompanyLogo = this._commonService.getCompanyLogo(x.CompanyId);
         });
         this.searchAll();   
         this._store.dispatch(new HideSpinner());
@@ -113,10 +114,6 @@ export class JobDashboardComponent implements OnInit {
     return Company[companyId];
   }
 
-  getCompanyLogo(companyId: number): string {
-    return Company[companyId].toLowerCase();
-  }
-
   openCreateJobModal() {
     const initialState: ModalOptions = {
       initialState: {
@@ -129,27 +126,6 @@ export class JobDashboardComponent implements OnInit {
       CreateJobComponent,
       initialState
     );
-  }
-
-  gotoRegister() {
-    this._router.navigate(['register']);
-  }
-
-  getPercentage(totApplied: string, capacity: string) {
-    return ((+totApplied / +capacity) * 100) + '%';
-  }
-
-  getColor(totApplied: string, capacity: string) {
-    let actual = (+totApplied / +capacity) * 100;
-
-    if (actual <= 20) {
-      return "red"
-    } else if (actual >= 21 && actual <= 50) {
-      return "orange"
-    } else if (actual >= 51 && actual <= 100) {
-      return "green"
-    }
-    return "white"
   }
 
   gotoEdit(jobId: number): void {
@@ -168,9 +144,6 @@ export class JobDashboardComponent implements OnInit {
 
   purgeJob(): void {
    this._store.dispatch(new ShowSpinner());
-
-    this.unsubscribe();
-
     this._jobService.purgeJob(this.jobId).pipe(
       take(1),
       tap(() => {
@@ -187,9 +160,4 @@ export class JobDashboardComponent implements OnInit {
   closeModal(): void {
     this.closebutton.nativeElement.click();
   }
-
-  unsubscribe(): void{
-    this.subscription?.unsubscribe();
-  }
-
 }
