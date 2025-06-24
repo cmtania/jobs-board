@@ -1,17 +1,19 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable, OperatorFunction, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, finalize, map, take, tap, timeout } from 'rxjs/operators';
 import { Company } from '../../model/company.enum';
 import { JobModel } from '../../model//job-model';
 import { JobService } from '../../services/job-services';
 import { SearchQuery } from '../../interfaces/search-query';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import * as _ from 'lodash';
-import { Store } from '@ngxs/store';
+import { Select, Selector, Store } from '@ngxs/store';
 import { HideSpinner, ShowSpinner } from '../../state-management/actions/spinner.action';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { CreateJobComponent } from '../create-job-modal/create-job.component';
 import { CommonService } from '../../services/common.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { JobState } from '../../state-management/states/job.state';
 
 @Component({
   selector: 'job-dashboard',
@@ -19,6 +21,8 @@ import { CommonService } from '../../services/common.service';
   styleUrls: ['./job-dashboard.component.css']
 })
 export class JobDashboardComponent implements OnInit {
+  @Select(JobState.getJobs) jobs$: Observable<any[]>;
+
   title = 'remoteJobs';
   jobs: JobModel[] = [];
   suggestions: any[] = [];
@@ -44,17 +48,26 @@ export class JobDashboardComponent implements OnInit {
   };
 
   bsModalRef?: BsModalRef;
-  
+  searchForm: FormGroup;
 
   typeahead: OperatorFunction<string, readonly string[]>;
 
-  constructor(
+  
+  private readonly _store: Store;
+
+  constructor(injector: Injector,
     private _jobService: JobService,
     private readonly _router: Router,
-    private readonly _store: Store,
     private readonly _modalService: BsModalService,
-    private readonly _commonService: CommonService) {
-      this.typeahead = (text$: Observable<string>) =>
+    private readonly _commonService: CommonService,
+    private fb: FormBuilder // add FormBuilder
+  ) {
+    this._store = injector.get(Store);
+    this.searchForm = this.fb.group({
+      type: [''],
+      text: ['']
+    });
+    this.typeahead = (text$: Observable<string>) =>
       text$.pipe(
         debounceTime(200),
         distinctUntilChanged(),
@@ -71,6 +84,11 @@ export class JobDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getJobs();
+    // sync form changes to search object
+    this.searchForm.valueChanges.subscribe(val => {
+      this.search.type = val.type;
+      this.search.text = val.text;
+    });
   }
 
   searchTypeChange() {
@@ -84,22 +102,22 @@ export class JobDashboardComponent implements OnInit {
   }
 
   getJobs() {
-    this._store.dispatch(new ShowSpinner());
-    this._jobService.getJobs().pipe(
-      take(1),
-      tap((resp: any) => {
-         this.jobs = resp;
-          this.sortByCreatedDate();
-      }),
-      finalize(() => {
-         this.jobs.map((x) => {
-          return x.CompanyName = this.getCompanyName(x.CompanyId),
-            x.CompanyLogo = this._commonService.getCompanyLogo(x.CompanyId);
-        });
-        this.searchAll();   
-        this._store.dispatch(new HideSpinner());
-      })
-    ).subscribe();
+    // this._store.dispatch(new ShowSpinner());
+    // this._jobService.getJobs().pipe(
+    //   take(1),
+    //   tap((resp: any) => {
+    //      this.jobs = resp;
+    //       this.sortByCreatedDate();
+    //   }),
+    //   finalize(() => {
+    //      this.jobs.map((x) => {
+    //       return x.CompanyName = this.getCompanyName(x.CompanyId),
+    //         x.CompanyLogo = this._commonService.getCompanyLogo(x.CompanyId);
+    //     });
+    //     this.searchAll();   
+    //     this._store.dispatch(new HideSpinner());
+    //   })
+    // ).subscribe();
   }
 
   searchAll(): void{
@@ -144,16 +162,16 @@ export class JobDashboardComponent implements OnInit {
 
   purgeJob(): void {
    this._store.dispatch(new ShowSpinner());
-    this._jobService.purgeJob(this.jobId).pipe(
-      take(1),
-      tap(() => {
-         this.closeModal();
-      }),
-      finalize(() => {
-        this.getJobs();
-        this._store.dispatch(new HideSpinner());
-      })
-    ).subscribe();
+    // this._jobService.purgeJob(this.jobId).pipe(
+    //   take(1),
+    //   tap(() => {
+    //      this.closeModal();
+    //   }),
+    //   finalize(() => {
+    //     this.getJobs();
+    //     this._store.dispatch(new HideSpinner());
+    //   })
+    // ).subscribe();
   
   }
 

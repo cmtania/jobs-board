@@ -5,8 +5,6 @@ import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { EditJobComponent } from "../job/edit-job/edit-job.component";
 import { JobDetailsComponent } from "../job/job-details/job-details.component";
-import { JobService } from "../services/job-services";
-import { ApplicantService } from "../services/applicant.service";
 import { JobDashboardComponent } from "../job/job-dashboard/job-dashboard.component";
 import { LayoutRoutingModule } from "./layout-routing.module";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -25,7 +23,6 @@ import { BsModalService, ModalModule } from "ngx-bootstrap/modal";
     ReactiveFormsModule,
     LayoutRoutingModule,
     NgbModule,
-    ReactiveFormsModule,
     ModalModule
   ],
   declarations: [

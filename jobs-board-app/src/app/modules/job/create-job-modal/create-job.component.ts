@@ -55,15 +55,15 @@ export class CreateJobComponent implements OnInit {
       Purge: 'N',
     } as any;
 
-    this._jobService
-      .postJob(newJob)
-      .pipe(
-        take(1),
-        finalize(() => {
-          this.createJobForm.reset();
-          this.bsModalRef.hide();
-        })
-      ).subscribe();
+    // this._jobService
+    //   .postJob(newJob)
+    //   .pipe(
+    //     take(1),
+    //     finalize(() => {
+    //       this.createJobForm.reset();
+    //       this.bsModalRef.hide();
+    //     })
+    //   ).subscribe();
   }
 
   getCompany(): any {

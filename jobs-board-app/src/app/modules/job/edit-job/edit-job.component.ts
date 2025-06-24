@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subscription, take, tap } from 'rxjs';
@@ -22,13 +22,17 @@ export class EditJobComponent implements OnInit {
   public subscription: Subscription = new Subscription();
   companyList: any[] = [];
 
+  private readonly _store: Store;
+
   constructor(
+    injector: Injector,
     private readonly fb: FormBuilder,
     private readonly _jobService: JobService,
-    private readonly _store: Store,
+    
     private _route: ActivatedRoute,
     private _router: Router
   ) {
+    this._store = injector.get(Store);
     this.jobId = this._route.snapshot.params.id;
   }
 
@@ -50,22 +54,22 @@ export class EditJobComponent implements OnInit {
 
   getJob() {
     this._store.dispatch(new ShowSpinner());
-    this._jobService.getJob(this.jobId)
-      .pipe(
-        take(1),
-        tap((resp: JobModel) => {
-          this.editJobForm.patchValue({
-            JobTitle: resp.JobTitle,
-            CompanyId: resp.CompanyId,
-            JobType: resp.JobType,
-            JobDescription: resp.JobDescription,
-            Salary: resp.Salary
-          });
-        }),
-        finalize(() => {
-          this._store.dispatch(new HideSpinner());
-        })
-      ).subscribe();
+    // this._jobService.getJob(this.jobId)
+    //   .pipe(
+    //     take(1),
+    //     tap((resp: JobModel) => {
+    //       this.editJobForm.patchValue({
+    //         JobTitle: resp.JobTitle,
+    //         CompanyId: resp.CompanyId,
+    //         JobType: resp.JobType,
+    //         JobDescription: resp.JobDescription,
+    //         Salary: resp.Salary
+    //       });
+    //     }),
+    //     finalize(() => {
+    //       this._store.dispatch(new HideSpinner());
+    //     })
+    //   ).subscribe();
   }
 
   updateJob() {
@@ -79,16 +83,16 @@ export class EditJobComponent implements OnInit {
       CreatedDate: new Date().toISOString(),
       Purge: 'N'
     };
-    this._jobService.putJob(updatedJob).pipe(
-      take(1),
-      tap(() => {
-        this._store.dispatch(new HideSpinner());
-      }),
-      finalize(() => {
-        this.editJobForm.reset();
-        this.backtoList();
-      })
-    ).subscribe();
+    // this._jobService.putJob(updatedJob).pipe(
+    //   take(1),
+    //   tap(() => {
+    //     this._store.dispatch(new HideSpinner());
+    //   }),
+    //   finalize(() => {
+    //     this.editJobForm.reset();
+    //     this.backtoList();
+    //   })
+    // ).subscribe();
   }
 
   getCompany(): any[] {

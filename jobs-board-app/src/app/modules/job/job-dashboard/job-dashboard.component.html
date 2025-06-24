@@ -18,30 +18,32 @@
     </div>
     <hr>
     <div class="row minimal-search align-items-center mb-3 sticky-search-bar">
-      <div class="col-auto p-0">
-        <select
-          class="form-control form-control-sm minimal-select"
-          [(ngModel)]="search.type"
-          (change)="searchTypeChange()">
-          <option value="">All</option>
-          <option value="CompanyName">Company</option>
-          <option value="JobTitle">Job Title</option>
-          <option value="JobType">Job Type</option>
-        </select>
-      </div>
-      <div class="col p-0">
-        <input
-          class="form-control form-control-sm minimal-input"
-          [(ngModel)]="search.text"
-          type="search"
-          placeholder="Search..."
-          [ngbTypeahead]="typeahead"
-        />
-      </div>
+      <form [formGroup]="searchForm" class="row w-100">
+        <div class="col-auto p-0">
+          <select
+            class="form-control form-control-sm minimal-select"
+            formControlName="type"
+            (change)="searchTypeChange()">
+            <option value="">All</option>
+            <option value="CompanyName">Company</option>
+            <option value="JobTitle">Job Title</option>
+            <option value="JobType">Job Type</option>
+          </select>
+        </div>
+        <div class="col p-0">
+          <input
+            class="form-control form-control-sm minimal-input"
+            formControlName="text"
+            type="search"
+            placeholder="Search..."
+            [ngbTypeahead]="typeahead"
+          />
+        </div>
+      </form>
     </div>
 
     <div class="row" *ngIf="jobs">
-        <div class="col-md-4" *ngFor='let job of jobs | filterText: search.text:search.type;'>
+        <div class="col-md-4" *ngFor='let job of (jobs$ | async) | filterText: search.text:search.type;'>
             <div class="card p-2 mb-1">
                 <div (click)="gotoView(job.JobId)">
                     <div class="d-flex justify-content-between">

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize, Subscription, take, tap } from 'rxjs';
 import { JobModel } from '../../model/job-model';
@@ -26,13 +26,17 @@ export class JobDetailsComponent implements OnInit {
   @ViewChild('closebutton') closebutton: any;
 
   public subscription: Subscription;
-  
+
+  private readonly _store: Store;
+
   constructor(
+    injector: Injector,
     private _jobService: JobService,
     private readonly _route: ActivatedRoute,
     private readonly _router: Router,
-    private readonly _store: Store,
     private readonly _commonService: CommonService) {
+      this._store = injector.get(Store);
+
       this.job = new JobModel();
       this.jobId = this._route.snapshot.params.id;
      }
@@ -46,16 +50,16 @@ export class JobDetailsComponent implements OnInit {
 
   getJob(){
     this._store.dispatch(new ShowSpinner());
-    this._jobService.getJob(this.jobId).pipe(
-      take(1),
-      tap((resp: any) => {
-         this.job = resp;
-         this.job.CompanyLogo = this._commonService.getCompanyLogo(this.job.CompanyId);
-      }),
-      finalize(() => {
-        this._store.dispatch(new HideSpinner());
-      })
-    ).subscribe();
+    // this._jobService.getJob(this.jobId).pipe(
+    //   take(1),
+    //   tap((resp: any) => {
+    //      this.job = resp;
+    //      this.job.CompanyLogo = this._commonService.getCompanyLogo(this.job.CompanyId);
+    //   }),
+    //   finalize(() => {
+    //     this._store.dispatch(new HideSpinner());
+    //   })
+    // ).subscribe();
   }
 
   updateJob(): void{
@@ -63,22 +67,22 @@ export class JobDetailsComponent implements OnInit {
     this.isUpdating = true;
     this.isSuccessNotif = true;
     this.job.JobDescription = this.jobDescription;
-    this._jobService.putJob(this.job).pipe(
-    take(1),
-    tap(() => {
-      this.isSuccessNotif = false;
-      this.getJob();
-      this.hideJd = false;
-      this.isLoading = true;
+    // this._jobService.putJob(this.job).pipe(
+    // take(1),
+    // tap(() => {
+    //   this.isSuccessNotif = false;
+    //   this.getJob();
+    //   this.hideJd = false;
+    //   this.isLoading = true;
      
-    }),
-    finalize(() => {
-      this.closeModal();
+    // }),
+    // finalize(() => {
+    //   this.closeModal();
 
-        setTimeout(() =>{
-        this.isSuccessNotif = true;
-      }, 2000);
-    })).subscribe();
+    //     setTimeout(() =>{
+    //     this.isSuccessNotif = true;
+    //   }, 2000);
+    // })).subscribe();
 }
 
 resetSubscription(): void{
