@@ -94,10 +94,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "jobs-board-app:build:production"
+              "buildTarget": "jobs-board-app:build:production"
             },
             "development": {
-              "browserTarget": "jobs-board-app:build:development"
+              "buildTarget": "jobs-board-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -105,7 +105,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "jobs-board-app:build"
+            "buildTarget": "jobs-board-app:build"
           }
         },
         "test": {
