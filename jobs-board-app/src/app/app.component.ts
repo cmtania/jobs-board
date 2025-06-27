@@ -3,6 +3,8 @@ import { Store } from '@ngxs/store';
 import { JobService } from './modules/services/job-services';
 import { take } from 'rxjs';
 import { LoadJobs } from './modules/state-management/actions/job.action';
+import { Company } from './modules/model/company.enum';
+import { CommonService } from './modules/services/common.service';
 
 
 @Component({
@@ -15,21 +17,27 @@ export class AppComponent {
 
   private readonly store: Store;
   private readonly jobService: JobService;
+  private readonly commonService: CommonService;
   constructor(injector: Injector){
     this.store = injector.get(Store);
     this.jobService = injector.get(JobService);
+    this.commonService = injector.get(CommonService);
   }
 
   ngOnInit(): void {
-    // Initialize any global state or services here
     this.jobService.getInitialData().pipe(
       take(1)
-    ).subscribe(data => {
+    ).subscribe((data: any[]) => {
+      data.map((x) => {
+          return x.CompanyName = this.getCompanyName(x.CompanyId),
+            x.CompanyLogo = this.commonService.getCompanyLogo(x.CompanyId);
+        });
       this.store.dispatch(new LoadJobs(data));
     });
-    // For example, you can dispatch an action to load initial data
-    // this.store.dispatch(new LoadInitialDataAction());
   }
 
 
+  private getCompanyName(companyId: number): string {
+    return Company[companyId];
+  }
 }

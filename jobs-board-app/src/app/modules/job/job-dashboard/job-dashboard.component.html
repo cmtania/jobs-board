@@ -42,8 +42,8 @@
       </form>
     </div>
 
-    <div class="row" *ngIf="jobs">
-        <div class="col-md-4" *ngFor='let job of (jobs$ | async) | filterText: search.text:search.type;'>
+    <div class="row">
+        <div class="col-md-4" *ngFor="let job of (jobs$ | async) | filterText: search.text:search.type;">
             <div class="card p-2 mb-1">
                 <div (click)="gotoView(job.JobId)">
                     <div class="d-flex justify-content-between">
@@ -51,7 +51,8 @@
                             <div class="icon"> <i class="fab fa-{{job.CompanyLogo}}"></i> </div>
                             <div class="ms-2 c-details">
                                 <h6 class="mb-0">{{job.CompanyName}}</h6><span>{{job.CreatedDate |
-                                    posteddate}}</span>
+                                    posteddate
+                                    }}</span>
                             </div>
                         </div>
                     </div>

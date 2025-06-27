@@ -27,21 +27,21 @@ export class PostedDatePipe implements PipeTransform {
     interval = seconds / 86400;
     if (interval > 1) {
       let d = " days";
-      if(interval = 1 ) d = " day ago";
+      if(interval === 1 ) d = " day ago";
       return Math.floor(interval).toString().concat(d);
     }
 
     interval = seconds / 3600;
     if (interval > 1) {
       let h = " hours ago";
-      if(interval = 1 ) h = " hour ago";
+      if(interval === 1 ) h = " hour ago";
       return Math.floor(interval).toString().concat(h);
     }
     
     interval = seconds / 60;
     if (interval > 1) {
       let m = " minutes ago";
-      if(interval = 1 ) m = " minute ago";
+      if(interval === 1 ) m = " minute ago";
       return Math.floor(interval).toString().concat(m);
     }
     return Math.floor(seconds).toString().concat(" seconds ago");

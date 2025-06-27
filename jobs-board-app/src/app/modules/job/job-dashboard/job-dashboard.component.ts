@@ -31,8 +31,11 @@ export class JobDashboardComponent implements OnInit {
   public subscription: Subscription;
   @ViewChild('closebutton') closebutton: any;
   searchText: string = "";
-  searchChangeText: string = "";
   searchVariable = ["JobTitle", "JobType", "CompanyName"];
+  search: SearchQuery = {
+    type: '',
+    text: '',
+  };
   
   modalConfig = {
     ignoreBackdropClick: true,
@@ -42,25 +45,19 @@ export class JobDashboardComponent implements OnInit {
 
   isJobType: boolean = true;
 
-  search: SearchQuery = {
-    type: '',
-    text: '',
-  };
-
   bsModalRef?: BsModalRef;
   searchForm: FormGroup;
 
+  private searchFormSubscription: Subscription;
+
   typeahead: OperatorFunction<string, readonly string[]>;
 
-  
   private readonly _store: Store;
 
   constructor(injector: Injector,
-    private _jobService: JobService,
     private readonly _router: Router,
     private readonly _modalService: BsModalService,
-    private readonly _commonService: CommonService,
-    private fb: FormBuilder // add FormBuilder
+    private fb: FormBuilder
   ) {
     this._store = injector.get(Store);
     this.searchForm = this.fb.group({
@@ -83,17 +80,17 @@ export class JobDashboardComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.getJobs();
-    // sync form changes to search object
-    this.searchForm.valueChanges.subscribe(val => {
+    this.searchFormSubscription = this.searchForm.valueChanges.subscribe(val => {
       this.search.type = val.type;
       this.search.text = val.text;
+      this.searchTypeChange();
     });
   }
 
   searchTypeChange() {
-    if(this.search.type){
-      this.suggestions = _.unionBy(_.map(this.jobs, this.search.type)); 
+    if(this.searchForm.value.type) {
+      const jobData = this._store.selectSnapshot(JobState.getJobs);
+      this.suggestions = _.unionBy(_.map(jobData, this.searchForm.value.type));
       
       return;
     }
@@ -101,36 +98,16 @@ export class JobDashboardComponent implements OnInit {
     this.searchAll();
   }
 
-  getJobs() {
-    // this._store.dispatch(new ShowSpinner());
-    // this._jobService.getJobs().pipe(
-    //   take(1),
-    //   tap((resp: any) => {
-    //      this.jobs = resp;
-    //       this.sortByCreatedDate();
-    //   }),
-    //   finalize(() => {
-    //      this.jobs.map((x) => {
-    //       return x.CompanyName = this.getCompanyName(x.CompanyId),
-    //         x.CompanyLogo = this._commonService.getCompanyLogo(x.CompanyId);
-    //     });
-    //     this.searchAll();   
-    //     this._store.dispatch(new HideSpinner());
-    //   })
-    // ).subscribe();
-  }
-
   searchAll(): void{
+    this.suggestions = [];
+    const jobData = this._store.selectSnapshot(JobState.getJobs);
+    console.log('jobData', jobData);
     this.searchVariable.forEach(x => {
-      let arr = _.unionBy(_.map(this.jobs, x));
+      let arr = _.unionBy(_.map(jobData, x));
        this.suggestions.push(...arr);
     });
   }
 
-
-  getCompanyName(companyId: number): string {
-    return Company[companyId];
-  }
 
   openCreateJobModal() {
     const initialState: ModalOptions = {
@@ -179,12 +156,9 @@ export class JobDashboardComponent implements OnInit {
     this.closebutton.nativeElement.click();
   }
 
-  private sortByCreatedDate(desc: boolean = true) {
-    if (!this.jobs || this.jobs.length === 0) return;
-    this.jobs = this.jobs.slice().sort((a, b) => {
-      const dateA = new Date(a.CreatedDate).getTime();
-      const dateB = new Date(b.CreatedDate).getTime();
-      return desc ? dateB - dateA : dateA - dateB;
-    });
+  ngOnDestroy(): void {
+    if (this.searchFormSubscription) {
+      this.searchFormSubscription.unsubscribe();
+    }
   }
 }

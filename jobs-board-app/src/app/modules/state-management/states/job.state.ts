@@ -1,5 +1,4 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { HideSpinner, ShowSpinner } from '../actions/spinner.action';
 import { AddJob, LoadJobs } from '../actions/job.action';
 
 export interface JobStateModel {
@@ -7,7 +6,7 @@ export interface JobStateModel {
 }
 
 @State<JobStateModel>({
-  name: 'spinner',
+  name: 'jobState',
   defaults: {
     jobs: []
   }
@@ -16,22 +15,34 @@ export class JobState {
 
   @Selector()
   static getJobs(state: JobStateModel): any[] {
-    return state.jobs;
+    if(state.jobs.length === 0) {
+      return [];
+    }
+    const desc = true; // Default to descending order
+
+    return state.jobs.slice().sort((a, b) => {
+      const dateA = new Date(a.CreatedDate).getTime();
+      const dateB = new Date(b.CreatedDate).getTime();
+      return desc ? dateB - dateA : dateA - dateB;
+    });
   }
 
   @Action(LoadJobs)
-  loadJobs(ctx: StateContext<JobStateModel>, action: LoadJobs) {
-    const state = ctx.getState();
-    ctx.patchState({
-    jobs: [...state.jobs, action.payload]
-  });
+  loadJobs(
+    { patchState }: StateContext<JobStateModel>,
+    { payload }: LoadJobs
+   ) {
+    console.log('Loading jobs:', [payload]);
+    patchState({ jobs: payload });
   }
 
   @Action(AddJob)
-  addJob(ctx: StateContext<JobStateModel>, action: AddJob) {
-    const state = ctx.getState();
-    ctx.patchState({
-    jobs: [...state.jobs, action.payload]
-  });
-  }
+  addJob(
+    { getState, patchState }: StateContext<JobStateModel>,
+    { payload }: AddJob
+  ) {
+    const state = getState();
+    patchState({ jobs: [...state.jobs, payload] });
+  };
+
 }

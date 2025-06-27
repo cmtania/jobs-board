@@ -1,6 +1,6 @@
 export class AddJob {
   static readonly type = '[Job] Add new job';
-  constructor(public payload: any[]) {}
+  constructor(public payload: any) {}
 }
 
 export class LoadJobs {

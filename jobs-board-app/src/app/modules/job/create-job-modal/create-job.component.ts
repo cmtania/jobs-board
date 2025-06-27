@@ -1,11 +1,12 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { finalize, take } from 'rxjs';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { Company } from '../../model/company.enum';
-import { JobService } from '../../services/job-services';
 import { JobModel } from '../../model/job-model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Store } from '@ngxs/store';
+import { AddJob } from '../../state-management/actions/job.action';
+import { CommonService } from '../../services/common.service';
 
 @Component({
   selector: 'app-create-job',
@@ -23,8 +24,9 @@ export class CreateJobComponent implements OnInit {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly _jobService: JobService,
-    public bsModalRef: BsModalRef
+    private readonly store: Store,
+    public bsModalRef: BsModalRef,
+    private readonly commonService: CommonService,
   ) {
     this.createJobForm = this.fb.group({
       JobTitle: ['', [Validators.required]],
@@ -45,6 +47,8 @@ export class CreateJobComponent implements OnInit {
       JobId: 0,
       JobTitle: this.createJobForm.value.JobTitle,
       CompanyId: parseInt(this.createJobForm.value.Company, 10),
+      CompanyName: Company[parseInt(this.createJobForm.value.Company, 10)],
+      CompanyLogo: this.commonService.getCompanyLogo(parseInt(this.createJobForm.value.Company, 10)),
       JobType: this.createJobForm.value.JobType,
       JobDescription: this.createJobForm.value.JobDescription,
       Salary: this.createJobForm.value.Salary,
@@ -55,15 +59,7 @@ export class CreateJobComponent implements OnInit {
       Purge: 'N',
     } as any;
 
-    // this._jobService
-    //   .postJob(newJob)
-    //   .pipe(
-    //     take(1),
-    //     finalize(() => {
-    //       this.createJobForm.reset();
-    //       this.bsModalRef.hide();
-    //     })
-    //   ).subscribe();
+    this.store.dispatch(new AddJob(newJob));
   }
 
   getCompany(): any {
